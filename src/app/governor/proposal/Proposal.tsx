@@ -58,11 +58,6 @@ const transactions = [
   },
   // More transactions...
 ];
-const statusStyles = {
-  success: "bg-green-100 text-green-800",
-  processing: "bg-yellow-100 text-yellow-800",
-  failed: "bg-gray-100 text-gray-800",
-};
 
 const projects = [
   {
@@ -526,7 +521,7 @@ export default function Proposal() {
                               <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
                                 <span
                                   className={clsx(
-                                    statusStyles[transaction.status],
+                                    "bg-green-100 text-green-800",
                                     "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize"
                                   )}
                                 >

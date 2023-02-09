@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import Link from 'next/link';
 import avatarImage from '@/images/avatar.jpg'
 import clsx from 'clsx';
 
@@ -48,7 +49,7 @@ export default function HomePage() {
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
+            <Link href="https://gjohns.xyz" target="_blank" rel="noreferrer" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <Image
                 src={avatarImage}
@@ -59,7 +60,7 @@ export default function HomePage() {
                 )}
                 priority
               />
-            </a>
+            </Link>
           </div>
         </nav>
       </div>
@@ -74,15 +75,15 @@ export default function HomePage() {
                 Redefining the user experience for Messari Governor, I reimagined the Governor platform with a focus on simplicity and clarity. 
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <a
+                <Link
                   href="/governor"
                   className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Visit the new Governor
-                </a>
-                <a href="#" className="text-base font-semibold leading-7 text-gray-900">
+                </Link>
+                <Link href="https://github.com/gjohnsx/messari-governor" target="_blank" rel="noreferrer" className="text-base font-semibold leading-7 text-gray-900">
                   Github <span aria-hidden="true">→</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

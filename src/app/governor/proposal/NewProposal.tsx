@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Fragment } from "react";
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -79,51 +79,65 @@ export default function NewProposal() {
                         <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
                           <table className="min-w-full divide-y divide-gray-800">
                             <tbody className="border-t border-gray-800 divide-y divide-gray-800">
-                              {votes.map((vote) => (
-                                <tr
-                                  key={vote.address}
-                                  className="text-sm text-white"
-                                >
-                                  <td className="py-4 pl-4 pr-3 font-medium text-white whitespace-nowrap sm:pl-6">
-                                    <div className="flex items-center justify-start space-x-1">
-                                      <Image
-                                        src={vote.avatar}
-                                        alt="DAO Logo"
-                                        className="object-cover w-6 h-6 rounded-full bg-zinc-100"
-                                        priority
-                                        width={24}
-                                        height={24}
-                                      />
-                                      <span>
-                                        {/* truncate address */}
-                                        {vote.address.length > 10
-                                          ? vote.address.substring(0, 10) +
-                                            "..."
-                                          : vote.address}
-                                      </span>
-                                    </div>
-                                  </td>
+                            {votes.slice(0, 10).map((vote) => {
+                    const votePercentage = vote.votePercentage.toString().split(
+                        "."
+                    )[0];
+                    const widthClass = `w-${votePercentage}`;
 
-                                  <td className="px-3 py-4 whitespace-nowrap">
-                                    {vote.vote.substring(0, 15) + "..."}
-                                  </td>
+                    return (
+                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
+                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
+                        <div className="flex items-center justify-start space-x-1">
+                          <Image
+                            src={vote.avatar}
+                            alt="DAO Logo"
+                            className="object-cover w-6 h-6 rounded-full bg-zinc-100"
+                            priority
+                            width={24}
+                            height={24}
+                          />
+                          <Link
+                            href={`https://etherscan.io/address/${vote.address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline hover:text-messari-blue-light"
+                          >
+                            {/* truncate address */}
+                            {vote.address.length > 10
+                              ? vote.address.substring(0, 10) + "..."
+                              : vote.address}
+                          </Link>
+                        </div>
+                      </td>
 
-                                  <td className="py-4 pl-3 pr-4 font-medium text-right whitespace-nowrap sm:pr-6">
-                                    {vote.voteAmount}
-                                  </td>
+                      <td className="py-4 whitespace-nowrap">
+                        {vote.vote}
+                      </td>
 
-                                  <td className="hidden py-4 pl-3 pr-4 font-medium text-right sm:table-cell whitespace-nowrap sm:pr-6">
-                                    {/* Progress Bar with vote count */}
-                                    <div className="">
-                                      <div className="rounded-full bg-messari-300">
-                                        <div className="bg-messari-blue-dark rounded-full w-[90%]">
-                                          %
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
+                      <td className="py-4 font-medium text-center whitespace-nowrap">
+                        {vote.voteAmount}
+                      </td>
+
+                      <td className="w-full py-4 mx-auto font-medium">
+                        {/* Progress Bar with vote count */}
+                        <div className="w-full">
+                          <div className="rounded-full bg-messari-300">
+                            <div className={clsx(
+                                widthClass,
+                                "bg-messari-blue-dark py-1.5 rounded-full"
+                            )}>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
+                        {vote.votePercentage}%
+                      </td>
+                    </tr>
+                  )
+                })}
                             </tbody>
                           </table>
                           <div
@@ -299,7 +313,7 @@ export default function NewProposal() {
                   <Dialog.Panel className="w-screen pointer-events-auto">
                     <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
-                        <div className="flex items-start justify-between">
+                        <div className="flex items-start justify-between max-w-lg px-6 mx-auto">
                           <Dialog.Title className="text-lg font-medium text-white">
                             Details
                           </Dialog.Title>
@@ -319,9 +333,9 @@ export default function NewProposal() {
                         </div>
                       </div>
 
-                      <div className="prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose prose-p:text-white prose-strong:text-white prose-strong:text-xl  !prose-headings:text-white sm:px-6 prose-li:text-white">
-                      <ReactMarkdown>
-                        {graphQlProposalData.data.proposal.body}
+                      <div className="md:mx-auto md:max-w-lg prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose prose-p:text-white prose-strong:text-white prose-strong:text-xl !prose-headings:text-white sm:px-6 prose-li:text-white">
+                        <ReactMarkdown>
+                          {graphQlProposalData.data.proposal.body}
                         </ReactMarkdown>
                       </div>
                     </div>
@@ -333,9 +347,9 @@ export default function NewProposal() {
         </Dialog>
       </Transition.Root>
 
-      <div className="bg-messari-500">
+      <div className="bg-messari-600">
         {/* Under Header */}
-        <div className="w-full bg-messari-300">
+        <div className="w-full bg-messari-400">
           <div className="flex items-center justify-between py-2 mx-auto max-w-7xl xl:px-8">
             <Link
               href="/governor"
@@ -353,29 +367,32 @@ export default function NewProposal() {
           </div>
         </div>
 
-        {/* Main */}
-        <div className="text-white border-b border-transparent shadow bg-messari-600">
+        {/* Header */}
+        <div className="text-white border-b border-transparent shadow md:pb-28 md:bg-messari-300 bg-messari-600 md:px-8">
           {/* Header */}
-          <div className="flex justify-between px-4 py-6">
+          <div className="flex justify-between max-w-4xl px-4 py-6 mx-auto md:flex-row-reverse md:justify-end">
             <div>
-              <h4 className="order-2 text-gray-400">
+              <h4 className="order-2 text-gray-400 md:text-lg">
                 {graphQlProposalData.data.proposal.space.name}
               </h4>
-              <h1 className="order-1 text-xl font-bold">
+              <h1 className="order-1 text-xl font-bold md:text-3xl">
                 {graphQlProposalData.data.proposal.title}
               </h1>
             </div>
             <Image
               src={daoLogo}
               alt="DAO Logo"
-              className="object-cover w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 md:h-20 md:w-20"
+              className="object-cover w-12 h-12 rounded-full bg-zinc-100 md:h-16 md:w-16 md:mr-4"
               priority
             />
           </div>
-          <div className="flex w-full px-4 py-2 space-x-1 bg-messari-600 text-[#AED8FD] text-sm">
-            <span className="whitespace-nowrap">Active vote</span>
-            <span>-</span>
-            <span className="flex items-center space-x-px whitespace-nowrap flex-nowrap">
+
+          <div className="max-w-4xl mx-auto flex items-center w-full px-4 py-2 bg-messari-600 dark:bg-transparent text-[#AED8FD] text-sm">
+            <span className="whitespace-nowrap md:text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase md:mr-1">
+              Active vote
+            </span>
+            <span className="md:hidden">-</span>
+            <span className="flex items-center space-x-px md:mx-2 whitespace-nowrap flex-nowrap">
               5 days left to vote via
               <BoltIcon
                 className="w-3 h-3 mx-px text-amber-500"
@@ -383,12 +400,25 @@ export default function NewProposal() {
               />
               Off-Chain Vote
             </span>
-          </div>
 
-          <div className="mb-8">
-            {/* Summary */}
-            <div className="px-4 py-4">
-              <h2 className="mb-2 font-bold">Summary</h2>
+            <Link
+              href="#"
+              className="items-center flex-grow-0 hidden px-3 py-2 ml-auto space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm md:inline-flex hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
+              <span>Off-Chain Vote</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="max-w-4xl pb-4 mx-auto text-white border-b-8 md:border-0 border-messari-500 bg-messari-600 md:-mt-16 md:rounded-md">
+          {/* Summary */}
+          <div className="overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+            <div className="px-4 pt-2 md:pt-4 md:px-6">
+              <h2 className="mb-2 font-bold md:text-lg">Summary</h2>
+            </div>
+            <div className="px-4 pb-2 md:py-4 md:px-6">
               <p>
                 This proposal aims to confirm the production of the FWB FEST
                 2023 from Aug. 10-13, 2023. The proposal recommends tickets be
@@ -397,48 +427,91 @@ export default function NewProposal() {
                 tickets sold.
               </p>
             </div>
+          </div>
 
-            {/* Classifications */}
-            <div className="px-4 py-4">
-              <h2 className="mb-2 font-bold">Classifications</h2>
-              <div className="flex flex-wrap gap-y-1">
-                <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 text-sm font-medium text-white mr-2">
-                  Team and Operations
-                </span>
-                <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 text-sm font-medium text-white mr-2">
-                  Treasury Funded Expense
-                </span>
-                <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 text-sm font-medium text-white">
-                  <FireIcon
-                    className="w-4 h-4 text-messari-blue-dark"
-                    aria-hidden="true"
-                  />
-                  Medium
-                </span>
+          {/* Classification */}
+          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+            <div className="px-4 pt-2 md:pt-4 md:px-6">
+              <h2 className="mb-2 font-bold md:text-lg">Classification</h2>
+            </div>
+            <div className="px-4 pb-2 md:py-4 md:px-6">
+              <div className="flex flex-wrap gap-y-1 md:gap-x-10">
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="category"
+                    className="hidden text-sm text-gray-400 md:inline"
+                  >
+                    Category
+                  </label>
+                  <span
+                    id="category"
+                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                  >
+                    Team and Operations
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="subcategory"
+                    className="hidden text-sm text-gray-400 md:inline"
+                  >
+                    Sub-category
+                  </label>
+
+                  <span
+                    id="subcategory"
+                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                  >
+                    Treasury Funded Expense
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <label
+                    htmlFor="importance"
+                    className="hidden text-sm text-gray-400 md:inline"
+                  >
+                    Importance
+                  </label>
+
+                  <span
+                    id="importance"
+                    className="inline-flex items-center space-x-1 rounded-md bg-messari-300 md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-white"
+                  >
+                    <FireIcon
+                      className="w-4 h-4 text-messari-blue-dark"
+                      aria-hidden="true"
+                    />
+                    <span>Medium</span>
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="px-4 py-4">
-              <h2 className="mb-2 font-bold">Useful Links</h2>
-              <Link
-                href="#"
-                className="inline-flex items-center px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
-                <span>Off-Chain Vote</span>
-              </Link>
-            </div>
+          {/* Useful Links */}
+          <div className="px-4 py-4 md:hidden">
+            <h2 className="mb-2 font-bold md:hidden">Useful Links</h2>
+            <Link
+              href="#"
+              className="inline-flex items-center px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
+              <span>Off-Chain Vote</span>
+            </Link>
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* Tabs for screens smaller than md */}
         <Tab.Group
           as="div"
-          className="px-4 py-6 my-2 border-t border-gray-800 shadow bg-messari-600"
+          className="px-4 py-6 mb-2 border-t border-gray-800 shadow inset-1 md:hidden bg-messari-600 md:px-8"
         >
           <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold text-white">Off-Chain Vote</h2>
-            <span className="text-sm uppercase text-messari-blue-light">
+            <h2 className="mb-2 font-bold text-white md:text-2xl">
+              Off-Chain Vote
+            </h2>
+
+            <span className="text-sm uppercase text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase">
               active vote
             </span>
           </div>
@@ -685,20 +758,300 @@ export default function NewProposal() {
                 </table>
               </div>
             </Tab.Panel>
-          </Tab.Panels>
-          <Tab.Panel>
-            <button
+            <Tab.Panel>
+              <button
                 className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
                 onClick={() => setDetailsDialogOpen(true)}
-                >
+              >
                 View Details
-                </button>
-          </Tab.Panel>
+              </button>
+            </Tab.Panel>
+          </Tab.Panels>
         </Tab.Group>
 
+        {/* Regular content for screens md and up */}
+        <div className="hidden max-w-4xl py-10 mx-auto my-2 border-t border-b border-gray-800 shadow md:block bg-messari-600">
+          <div className="flex items-baseline justify-between flex-nowrap">
+            <h2 className="mb-2 font-bold text-white md:text-2xl">
+              Off-Chain Vote
+            </h2>
+
+            <span className="text-sm uppercase text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase">
+              active vote
+            </span>
+          </div>
+          <span className="text-sm text-gray-400">Started 2 days ago</span>
+
+          {/* Active Vote */}
+          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+            <div className="px-4 pt-2 md:pt-4 md:px-6">
+              <h2 className="mb-2 font-bold text-white md:text-lg">
+                Active Vote
+              </h2>
+            </div>
+            <div className="px-4 pb-2 md:py-4 md:px-6">
+              <h4 className="mr-2 text-sm font-medium text-white">
+                Voting ends in 5 days
+              </h4>
+              <div className="flex flex-col mt-4">
+                {proposalVoteOptions.map((option) => (
+                  <div className="flex flex-col" key={option.title}>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-white">{option.title}</span>
+                      <span className="text-white">
+                        {option.percentage.toString()}%
+                      </span>
+                    </div>
+
+                    {/* Progress Bar with vote count */}
+                    <div className="">
+                      <div className="rounded-full bg-messari-300">
+                        <div
+                        //   className={`bg-messari-blue-dark rounded-full w-[1%]`}
+                          className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
+                        >
+                          <p className="text-xs text-white whitespace-nowrap indent-2">
+                            {truncateVoteCount(option.voteCount)} Votes
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Voters */}
+          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+            <div className="px-4 pt-2 md:pt-4 md:px-6">
+              <h2 className="mb-2 font-bold text-white md:text-lg">Voters</h2>
+            </div>
+            <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-800">
+                <tbody className="divide-y divide-gray-800">
+                  {votes.slice(0, 5).map((vote) => {
+                    const votePercentage = vote.votePercentage.toString().split(
+                        "."
+                    )[0];
+                    const widthClass = `w-${votePercentage}`;
+
+                    return (
+                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
+                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
+                        <div className="flex items-center justify-start space-x-1">
+                          <Image
+                            src={vote.avatar}
+                            alt="DAO Logo"
+                            className="object-cover w-6 h-6 rounded-full bg-zinc-100"
+                            priority
+                            width={24}
+                            height={24}
+                          />
+                          <Link
+                            href={`https://etherscan.io/address/${vote.address}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline hover:text-messari-blue-light"
+                          >
+                            {/* truncate address */}
+                            {vote.address.length > 10
+                              ? vote.address.substring(0, 10) + "..."
+                              : vote.address}
+                          </Link>
+                        </div>
+                      </td>
+
+                      <td className="py-4 whitespace-nowrap">
+                        {vote.vote}
+                      </td>
+
+                      <td className="py-4 font-medium text-center whitespace-nowrap">
+                        {vote.voteAmount}
+                      </td>
+
+                      <td className="w-full py-4 mx-auto font-medium">
+                        {/* Progress Bar with vote count */}
+                        <div className="w-full">
+                          <div className="rounded-full bg-messari-300">
+                            <div className={clsx(
+                                widthClass,
+                                "bg-messari-blue-dark py-1.5 rounded-full"
+                            )}>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
+                        {vote.votePercentage}%
+                      </td>
+                    </tr>
+                  )
+                })}
+                </tbody>
+              </table>
+              <div
+                className="flex items-center justify-between py-3 text-white border-t border-gray-800 sm:px-6"
+                aria-label="Pagination"
+              >
+                <button
+                  className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                  onClick={() => setVotesDialogOpen(true)}
+                >
+                  View All 51 Voters
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Info */}
+          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+            <div className="px-4 pt-2 md:pt-4 md:px-6">
+              <h2 className="mb-2 font-bold text-white md:text-lg">Key Info</h2>
+            </div>
+            <div className="px-4 pb-2 md:py-4 md:px-6">
+              <div className="grid min-w-full grid-cols-2 gap-x-10">
+                <div className="flex justify-between">
+                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Author
+                  </span>
+                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <Link
+                      href="https://etherscan.io/address/drewcoffman.eth"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-end text-messari-blue-light"
+                    >
+                      <span className="hover:underline">drewcoffman.eth</span>
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                    </Link>
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Author Type
+                  </span>
+                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    Core
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Strategies
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <button
+                      className="text-messari-blue-light hover:underline"
+                      onClick={() => setStrategiesDialogOpen(true)}
+                    >
+                      3 strategies
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    IPFS
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <Link
+                      href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-end text-messari-blue-light"
+                    >
+                      <span className="hover:underline">#bafkrei</span>
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Voting System
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <span>Single choice voting</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Snapshot Block
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <Link
+                      href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-end text-messari-blue-light"
+                    >
+                      <span className="hover:underline">
+                        {graphQlProposalData.data.proposal.snapshot}
+                      </span>
+                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Start Date
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <span>Feb 7, 2023</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    End Date
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <span>Feb 14, 2023</span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Total Votes Cast
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <span>
+                      {truncateVoteCount(
+                        graphQlProposalData.data.proposal.scores.reduce(
+                          (acc, curr) => (acc += curr)
+                        )
+                      )}{" "}
+                      Votes
+                    </span>
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                    Total Voters
+                  </div>
+                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                    <span>
+                      {graphQlProposalData.data.proposal.votes} Voters
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Details button */}
+          <div>
+            <button
+              className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+              onClick={() => setDetailsDialogOpen(true)}
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+
         {/* Related Proposals */}
-        <div className="px-4 py-6 text-white border-t border-gray-800 shadow bg-messari-600">
-          <h2 className="mb-2 font-bold">Related Proposals</h2>
+        <div className="max-w-4xl py-6 mx-auto text-white border-t-8 shadow md:border-0 border-messari-500 bg-messari-600">
+          <h2 className="mb-2 font-bold text-white md:text-2xl">
+            Related Proposals
+          </h2>
 
           {/* List */}
           <div>
@@ -706,15 +1059,37 @@ export default function NewProposal() {
               {relatedProposals.map((proposal) => (
                 <li
                   key={proposal.title}
-                  className="flex items-start justify-between px-4 py-4 overflow-hidden text-sm rounded-md shadow bg-messari-500 sm:px-6"
+                  className="flex items-start justify-between px-4 py-4 overflow-hidden text-sm rounded-md shadow md:justify-end md:items-center md:flex-row-reverse bg-messari-500 sm:px-6"
                 >
+                  <div className="hidden md:ml-auto md:flex md:flex-col">
+                    <span
+                      className={clsx(
+                        "px-3 py-1.5 min-w-[100px] text-center uppercase text-xs border",
+                        proposal.status === "Succeeded"
+                          ? "text-green-500 border-green-500"
+                          : "text-red-500 border-red-500"
+                      )}
+                    >
+                      {proposal.status}
+                    </span>
+                    <p className="hidden pt-2 text-right text-gray-400 md:block">
+                      {proposal.created}
+                    </p>
+                  </div>
                   <div>
-                    <h3 className="font-bold">{proposal.title}</h3>
+                    <Link
+                      href="#"
+                      className="font-bold hover:underline hover:text-messari-blue-light md:text-lg md:font-normal"
+                    >
+                      {proposal.title}
+                    </Link>
 
-                    <h4 className="mb-2 text-gray-400">{proposal.dao}</h4>
+                    <h4 className="mb-2 text-gray-400 md:text-md">
+                      {proposal.dao}
+                    </h4>
 
                     {/* Badges */}
-                    <div className="my-2">
+                    <div className="my-2 md:hidden">
                       <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-white mr-2">
                         {proposal.status === "Succeeded" && (
                           <>
@@ -748,12 +1123,15 @@ export default function NewProposal() {
                         <span>{proposal.priority}</span>
                       </span>
                     </div>
-                    <p className="text-gray-400">Created {proposal.created}</p>
+                    <p className="text-gray-400 md:hidden">
+                      Created {proposal.created}
+                    </p>
                   </div>
+
                   <Image
                     src={daoLogo}
                     alt="DAO Logo"
-                    className="object-cover rounded-full w-9 h-9 bg-zinc-100 dark:bg-zinc-800 md:h-20 md:w-20"
+                    className="object-cover rounded-full md:mr-4 w-9 h-9 bg-zinc-100 dark:bg-zinc-800 md:h-16 md:w-16"
                     priority
                   />
                 </li>
@@ -765,14 +1143,6 @@ export default function NewProposal() {
     </>
   );
 }
-
-const keyInfo = [
-  {
-    title: "Author",
-    data: "drewcoffman.eth",
-    href: "#",
-  },
-];
 
 const relatedProposals = [
   {
@@ -827,6 +1197,7 @@ const votes = [
     address: "bodge.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "2K FWB",
+    votePercentage: 12.03,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x625D6405DCac9C82F4b681A131d9182115448F75?s=36",
   },
@@ -834,13 +1205,15 @@ const votes = [
     address: "nufrontiers.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "1.1K FWB",
+    votePercentage: 6.33,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x083227628A8ce4B78AC244Ffd140392393024242?s=36",
   },
   {
-    address: "0x7AE4...0f5d",
+    address: "0x7AE41835444183A23bAA10EbfdF2997D10130f5d",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "700 FWB",
+      votePercentage: 4.19,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x7AE41835444183A23bAA10EbfdF2997D10130f5d?s=36",
   },
@@ -848,6 +1221,7 @@ const votes = [
     address: "drewcoffman.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "551 FWB",
+      votePercentage: 3.29,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0xc7A0D765C3aF6E2710bA05A56c5E2cA190C2E11e?s=36",
   },
@@ -855,13 +1229,15 @@ const votes = [
     address: "kirkusmaximus.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "543 FWB",
+      votePercentage: 3.25,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x2afE4De9D1C679E42C03649D86FFDDDc07751AE6?s=36",
   },
   {
-    address: "0xE802...Dce8",
+    address: "0xE802A4D7dBB8c2010b336A49f86a765a7eb0Dce8",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "450 FWB",
+      votePercentage: 3,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0xE802A4D7dBB8c2010b336A49f86a765a7eb0Dce8?s=36",
   },
@@ -869,13 +1245,15 @@ const votes = [
     address: "gbresnitz.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "385 FWB",
+      votePercentage: 2.5,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x473e95Ac3646D286651aDF5Fa736368DFdCf9605?s=36",
   },
   {
-    address: "0x7d8D...7e8F",
+    address: "0x7d8D2c8EA18f9a3Da11066f02057DAd708f97e8F",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "365 FWB",
+      votePercentage: 2.4,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x7d8D2c8EA18f9a3Da11066f02057DAd708f97e8F?s=36",
   },
@@ -883,6 +1261,7 @@ const votes = [
     address: "quintela.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "322 FWB",
+      votePercentage: 2.3,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x26982bdD9A25dEa454d62B5BeC236B4ECd0A5b0b?s=36",
   },
@@ -890,6 +1269,7 @@ const votes = [
     address: "fabiolaio.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "261 FWB",
+      votePercentage: 2,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x06A61Fd03051ae191C5c0321324c85Db11340bc7?s=36",
   },

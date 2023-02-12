@@ -14,7 +14,7 @@ export default function VersionSwitch() {
 
   return (
     <>
-      {/* <div className="fixed flex items-center justify-between h-16 px-4 py-2 space-x-1 text-white bg-gray-700 border border-gray-200 rounded-full shadow w-72 bottom-14 md:left-1/3 left-10">
+      <div className="fixed flex items-center justify-between h-16 px-4 py-2 space-x-1 text-white bg-gray-700 border border-gray-200 rounded-full shadow w-72 bottom-14 md:left-1/3 left-10">
         <p>
           Switch between versions
         </p>
@@ -31,7 +31,7 @@ export default function VersionSwitch() {
             } inline-block h-4 w-4 transform rounded-full bg-white transition`}
           />
         </Switch>
-      </div> */}
+      </div>
 
       {enabled ? <NewProposal /> : <OldProposal />}
     </>

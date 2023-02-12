@@ -68,7 +68,7 @@ export default function HomePage() {
       </div>
       <main>
         <div className="relative px-6 lg:px-8">
-          <div className="max-w-2xl py-32 mx-auto sm:py-48 lg:py-56">
+          <div className="max-w-2xl py-32 mx-auto ">
             <div className="text-center">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
                 My application for Frontend Engineer
@@ -78,7 +78,7 @@ export default function HomePage() {
               </p>
               <div className="flex items-center justify-center mt-10 gap-x-6">
                 <Link
-                  href="/governor"
+                  href="/governor/proposal"
                   className="rounded-md bg-indigo-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Visit the new Governor

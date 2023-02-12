@@ -472,7 +472,7 @@ export default function OldProposal() {
         <div className="w-full bg-[#d6ddeb] dark:bg-messari-400">
           <div className="flex items-center justify-between py-2 mx-auto max-w-7xl xl:px-8">
             <Link
-              href="/governor"
+              href="/"
               className="flex text-gray-900 transition-colors dark:text-white hover:text-blue-500"
             >
               <ChevronLeftIcon className="w-6 h-6" aria-hidden="true" />
@@ -494,7 +494,7 @@ export default function OldProposal() {
                 <div className="px-6 py-4 my-4 overflow-hidden bg-white rounded-md shadow dark:bg-messari-300">
                   <div>
                     <div className="md:flex md:items-end md:justify-between md:space-x-4 xl:border-b dark:border-gray-800 xl:pb-2">
-                      <div className="flex justify-start md:space-x-5">
+                      <div className="flex justify-start">
                         <div>
                           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                             {graphQlProposalData.data.proposal.title}
@@ -517,11 +517,11 @@ export default function OldProposal() {
                         <Image
                           src={daoLogo}
                           alt="DAO Logo"
-                          className="object-cover w-16 h-16 border border-gray-400 rounded-full shadow-inner bg-zinc-100 md:mr-4"
+                          className="object-cover w-16 h-16 -ml-4 border border-gray-400 rounded-full shadow-inner bg-zinc-100 md:mr-4"
                           priority
                         />
                       </div>
-                      <div className="flex items-end justify-end mt-4 space-x-3 md:mt-0">
+                      <div className="flex mt-4 space-x-3 md:justify-end md:mt-0">
                         <Link
                           href={offChainVoteLink}
                           className="inline-flex items-center flex-grow-0 px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white rounded-md shadow-sm hover:bg-messari-blue-dark bg-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -535,51 +535,23 @@ export default function OldProposal() {
                       </div>
                     </div>
 
-                    <aside className="mt-8 xl:hidden">
-                      <h2 className="sr-only">Details</h2>
-                      <div className="space-y-5">
-                        <ProposalStatusBadge />
-
-                        <div className="flex items-center space-x-2">
-                          <CalendarIcon
-                            className="w-5 h-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            Created on{" "}
-                            <time dateTime="2020-12-02">Dec 2, 2020</time>
-                          </span>
-                        </div>
+                    <aside className="mt-2 xl:hidden">
+                    <div className="py-3 xl:pt-6 xl:pb-0">
+                      <h2 className="sr-only">Summary</h2>
+                      <div className="prose max-w-none dark:text-gray-200">
+                        <p>
+                          This proposal aims to confirm the production of the
+                          FWB FEST 2023 from Aug. 10-13, 2023. The proposal
+                          recommends tickets be priced at $399 for members and
+                          $499 for non-members and projects profits from $63,980
+                          - $522,980 depending on the amount of tickets sold.
+                        </p>
                       </div>
-
-                      <div className="py-6 mt-6 space-y-8 border-t border-b border-gray-200 dark:border-gray-800">
+                    </div>
+                      <h2 className="sr-only">Details</h2>
+                      <div className="space-y-8 border-t border-b border-gray-200 py- dark:border-gray-800">
                         <div>
-                          <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                            Assignees
-                          </h2>
-                          <ul role="list" className="mt-3 space-y-3">
-                            <li className="flex justify-start">
-                              <a
-                                href="#"
-                                className="flex items-center space-x-3"
-                              >
-                                <div className="flex-shrink-0">
-                                  <img
-                                    className="w-5 h-5 rounded-full"
-                                    src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
-                                    alt=""
-                                  />
-                                </div>
-                                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                  Eduardo Benz
-                                </div>
-                              </a>
-                            </li>
-                          </ul>
-                        </div>
-
-                        <div>
-                          <h2 className="text-sm font-medium text-gray-500">
+                          <h2 className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
                             Classification
                           </h2>
                           <div className="pb-2 md:py-4 md:px-6">
@@ -593,7 +565,7 @@ export default function OldProposal() {
                                 </label>
                                 <span
                                   id="category"
-                                  className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                                  className="inline-flex items-center rounded-md md:bg-transparent dark:bg-messari-500 bg-[#D6DDEB] md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-gray-900 dark:text-white mr-2"
                                 >
                                   Team and Operations
                                 </span>
@@ -608,7 +580,7 @@ export default function OldProposal() {
 
                                 <span
                                   id="subcategory"
-                                  className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                                  className="inline-flex items-center rounded-md dark:bg-messari-500 md:bg-transparent bg-[#D6DDEB] md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-gray-900 dark:text-white mr-2"
                                 >
                                   Treasury Funded Expense
                                 </span>
@@ -623,7 +595,7 @@ export default function OldProposal() {
 
                                 <span
                                   id="importance"
-                                  className="inline-flex items-center space-x-1 rounded-md bg-messari-300 md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-white"
+                                  className="inline-flex dark:bg-messari-500 items-center space-x-1 rounded-md bg-[#D6DDEB] md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-gray-900 dark:text-white"
                                 >
                                   <FireIcon
                                     className="w-4 h-4 text-messari-blue-dark"
@@ -637,8 +609,8 @@ export default function OldProposal() {
                         </div>
                       </div>
                     </aside>
-                    <div className="py-3 xl:pt-6 xl:pb-0">
-                      <h2 className="sr-only">Description</h2>
+                    <div className="hidden py-3 md:block xl:pt-6 xl:pb-0">
+                      <h2 className="sr-only">Summary</h2>
                       <div className="prose max-w-none dark:text-gray-200">
                         <p>
                           This proposal aims to confirm the production of the
@@ -970,9 +942,11 @@ export default function OldProposal() {
                       <h2 className="sr-only">
                         Classification
                       </h2>
-                      <div className="pb-2 ">
+                      
+                      {/* Badges */}
+                      <div className="pb-2">
                         <div className="flex flex-col gap-y-1 ">
-                          <div className="flex flex-col">
+                          <div className="flex flex-col max-w-fit">
                             <label
                               htmlFor="category"
                               className="text-sm text-gray-500 dark:text-gray-400"
@@ -981,12 +955,12 @@ export default function OldProposal() {
                             </label>
                             <span
                               id="category"
-                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                              className="inline-flex items-center flex-grow-0 rounded-md text-gray-800 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
                             >
                               Team and Operations
                             </span>
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col max-w-fit">
                             <label
                               htmlFor="subcategory"
                               className="text-sm text-gray-500 dark:text-gray-400"
@@ -996,12 +970,12 @@ export default function OldProposal() {
 
                             <span
                               id="subcategory"
-                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                              className="inline-flex items-center flex-grow-0 rounded-md text-gray-800 px-2.5 py-0.5 md:px-0 text-sm md:text-md font-medium dark:text-white mr-2"
                             >
                               Treasury Funded Expense
                             </span>
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col max-w-fit">
                             <label
                               htmlFor="importance"
                               className="text-sm text-gray-500 dark:text-gray-400"
@@ -1011,7 +985,7 @@ export default function OldProposal() {
 
                             <span
                               id="importance"
-                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                              className="inline-flex items-center flex-grow-0 rounded-md text-gray-800  px-2.5 py-0.5 md:px-0  text-sm md:text-md font-medium dark:text-white mr-2"
                             >
                               <FireIcon
                                 className="w-4 h-4 text-messari-blue-dark"
@@ -1022,6 +996,61 @@ export default function OldProposal() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Badges */}
+                      {/* <div className="pb-2">
+                        <div className="flex flex-col gap-y-1 ">
+                          <div className="flex flex-col max-w-fit">
+                            <label
+                              htmlFor="category"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Category
+                            </label>
+                            <span
+                              id="category"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-[#D6DDEB] text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              Team and Operations
+                            </span>
+                          </div>
+                          <div className="flex flex-col max-w-fit">
+                            <label
+                              htmlFor="subcategory"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Sub-category
+                            </label>
+
+                            <span
+                              id="subcategory"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-[#D6DDEB] text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              Treasury Funded Expense
+                            </span>
+                          </div>
+                          <div className="flex flex-col max-w-fit">
+                            <label
+                              htmlFor="importance"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Importance
+                            </label>
+
+                            <span
+                              id="importance"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-[#D6DDEB] text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              <FireIcon
+                                className="w-4 h-4 text-messari-blue-dark"
+                                aria-hidden="true"
+                              />
+                              <span>Medium</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div> */}
+
                     </div>
                   </div>
                 </div>
@@ -1033,27 +1062,14 @@ export default function OldProposal() {
         {/* Tabs for screens smaller than md */}
         <Tab.Group
           as="div"
-          className="px-4 py-6 bg-white border-t border-gray-200 shadow dark:border-gray-800 inset-1 md:hidden dark:bg-messari-600 md:px-8"
+          className="px-4 py-2 bg-white border-t border-gray-200 shadow dark:border-gray-800 inset-1 md:hidden dark:bg-messari-600 md:px-8"
         >
-          <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold dark:text-white md:text-2xl">
-              Off-Chain Vote
-            </h2>
-
-            <span className="px-4 py-px text-sm uppercase border text-messari-blue-light border-messari-blue-light md:uppercase">
-              active vote
-            </span>
-          </div>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Started 2 days ago
-          </span>
-
           <Tab.List className="flex justify-between w-full mx-auto my-4 space-x-2">
             <Tab
               className={clsx(
                 "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
                 "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
-                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none outline-none"
               )}
             >
               Active Vote
@@ -1062,7 +1078,7 @@ export default function OldProposal() {
               className={clsx(
                 "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
                 "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
-                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none outline-none"
               )}
             >
               Voters
@@ -1071,7 +1087,7 @@ export default function OldProposal() {
               className={clsx(
                 "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
                 "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
-                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded-b-none outline-none"
               )}
             >
               Key Info
@@ -1080,7 +1096,7 @@ export default function OldProposal() {
               className={clsx(
                 "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
                 "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
-                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none outline-none"
               )}
             >
               Details
@@ -1382,7 +1398,7 @@ export default function OldProposal() {
 
                     {/* Badges */}
                     <div className="my-2 md:hidden">
-                      <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-white mr-2">
+                      <span className="inline-flex items-center rounded-md bg-[#D6DDEB] dark:bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-gray-900 dark:text-white mr-2">
                         {proposal.status === "Succeeded" && (
                           <>
                             <CheckIcon
@@ -1402,7 +1418,7 @@ export default function OldProposal() {
                           </>
                         )}
                       </span>
-                      <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-white mr-2">
+                      <span className="inline-flex items-center rounded-md bg-[#D6DDEB] dark:bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-gray-900 dark:text-white mr-2">
                         <FireIcon
                           className={clsx(
                             proposal.priority === "Low"

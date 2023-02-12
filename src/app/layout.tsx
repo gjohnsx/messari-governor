@@ -46,21 +46,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="bg-messari-600">
-      <head>
-      <Script
-        id="themeScript"
-        dangerouslySetInnerHTML={{
-          __html: themeScript,
-        }}
-      />
-      </head>
+      <head />
       <body
         className="selection:bg-messari-blue-dark"
         // className="selection:bg-indigo-500/30 debug-screens"
       >
         {children}
       </body>
-     
+      <Script
+        id="themeScript"
+        dangerouslySetInnerHTML={{
+          __html: themeScript,
+        }}
+      />
     </html>
   )
 };

@@ -43,7 +43,7 @@ export default function OldProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -54,10 +54,10 @@ export default function OldProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Votes
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -78,75 +78,84 @@ export default function OldProposal() {
                       <div className="relative flex-1 px-4 mt-6 sm:px-6">
                         <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
                           <table className="min-w-full divide-y divide-gray-800">
-                            <tbody className="border-t border-gray-800 divide-y divide-gray-800">
-                            {votes.slice(0, 10).map((vote) => {
-                    const votePercentage = vote.votePercentage.toString().split(
-                        "."
-                    )[0];
-                    const widthClass = `w-${votePercentage}`;
+                            <tbody className="border-t border-gray-200 divide-y-2 divide-gray-200 dark:border-gray-800 dark:divide-gray-800">
+                              {votes.slice(0, 10).map((vote) => {
+                                const votePercentage = vote.votePercentage
+                                  .toString()
+                                  .split(".")[0];
+                                const widthClass = `w-${votePercentage}`;
 
-                    return (
-                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
-                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
-                        <div className="flex items-center justify-start space-x-1">
-                          <Image
-                            src={vote.avatar}
-                            alt="DAO Logo"
-                            className="object-cover w-6 h-6 rounded-full bg-zinc-100"
-                            priority
-                            width={24}
-                            height={24}
-                          />
-                          <Link
-                            href={`https://etherscan.io/address/${vote.address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline hover:text-messari-blue-light"
-                          >
-                            {/* truncate address */}
-                            {vote.address.length > 10
-                              ? vote.address.substring(0, 10) + "..."
-                              : vote.address}
-                          </Link>
-                        </div>
-                      </td>
+                                return (
+                                  <tr
+                                    key={vote.address}
+                                    className="grid items-center grid-cols-3 text-sm text-gray-900 md:grid-cols-5 dark:text-white justify-evenly"
+                                  >
+                                    <td className="py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
+                                      <div className="flex items-center justify-start space-x-1">
+                                        <Image
+                                          src={vote.avatar}
+                                          alt="DAO Logo"
+                                          className="object-cover w-6 h-6 rounded-full bg-zinc-100"
+                                          priority
+                                          width={24}
+                                          height={24}
+                                        />
+                                        <Link
+                                          href={`https://etherscan.io/address/${vote.address}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="hover:underline hover:text-messari-blue-light"
+                                        >
+                                          {/* truncate address */}
+                                          {vote.address.length > 10
+                                            ? vote.address.substring(0, 10) +
+                                              "..."
+                                            : vote.address}
+                                        </Link>
+                                      </div>
+                                    </td>
 
-                      <td className="py-4 whitespace-nowrap">
-                        {vote.vote}
-                      </td>
+                                    <td className="hidden py-4 md:block whitespace-nowrap">
+                                      {vote.vote}
+                                    </td>
 
-                      <td className="py-4 font-medium text-center whitespace-nowrap">
-                        {vote.voteAmount}
-                      </td>
+                                    <td className="py-4 md:hidden whitespace-nowrap">
+                                      {vote.vote.substring(0, 16) + "..."}
+                                    </td>
 
-                      <td className="w-full py-4 mx-auto font-medium">
-                        {/* Progress Bar with vote count */}
-                        <div className="w-full">
-                          <div className="rounded-full bg-messari-300">
-                            <div className={clsx(
-                                widthClass,
-                                "bg-messari-blue-dark py-1.5 rounded-full"
-                            )}>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
+                                    <td className="py-4 font-medium text-center whitespace-nowrap">
+                                      {vote.voteAmount}
+                                    </td>
 
-                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
-                        {vote.votePercentage}%
-                      </td>
-                    </tr>
-                  )
-                })}
+                                    <td className="hidden w-full py-4 mx-auto font-medium md:block">
+                                      {/* Progress Bar with vote count */}
+                                      <div className="w-full">
+                                        <div className="rounded-full bg-messari-300">
+                                          <div
+                                            className={clsx(
+                                              widthClass,
+                                              "bg-messari-blue-dark py-1.5 rounded-full"
+                                            )}
+                                          ></div>
+                                        </div>
+                                      </div>
+                                    </td>
+
+                                    <td className="hidden py-4 pr-6 font-medium text-right md:block whitespace-nowrap">
+                                      {vote.votePercentage}%
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                           <div
-                            className="flex items-center justify-between px-4 py-3 border-t border-gray-800 sm:px-6"
+                            className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800 sm:px-6"
                             aria-label="Pagination"
                           >
                             <div className="flex justify-center flex-1">
                               <button
-                                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm text-messari-blue-light hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm text-messari-blue-light hover:bg-gray-100 dark:hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 border-messari-blue-light"
                                 onClick={() =>
                                   console.log("loading more votes...")
                                 }
@@ -177,7 +186,7 @@ export default function OldProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -188,10 +197,10 @@ export default function OldProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
-                        <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                        <div className="flex items-start justify-between max-w-lg px-6 mx-auto">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Strategies
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -210,7 +219,7 @@ export default function OldProposal() {
                         </div>
                       </div>
 
-                      <div className="relative flex-1 px-4 mt-6 sm:px-6">
+                      <div className="relative flex-1 px-4 mt-6 sm:px-[30%]">
                         <table className="min-w-full divide-y divide-gray-300">
                           <tbody>
                             {graphQlProposalData.data.proposal.strategies.map(
@@ -220,7 +229,7 @@ export default function OldProposal() {
                                     <th
                                       colSpan={5}
                                       scope="colgroup"
-                                      className="py-2 text-sm font-semibold text-left text-white sm:px-6"
+                                      className="py-2 text-sm font-semibold text-left text-gray-900 dark:text-white sm:px-6"
                                     >
                                       {strategy.name}
                                     </th>
@@ -228,10 +237,10 @@ export default function OldProposal() {
 
                                   {strategy.params.address && (
                                     <tr>
-                                      <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         Address
                                       </td>
-                                      <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         <Link
                                           href={`https://etherscan.io/address/${strategy.params.address}`}
                                           target="_blank"
@@ -257,19 +266,19 @@ export default function OldProposal() {
                                   )}
                                   {strategy.params.decimals && (
                                     <tr>
-                                      <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         Decimals
                                       </td>
-                                      <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         {strategy.params.decimals}
                                       </td>
                                     </tr>
                                   )}
-                                  <tr className="border-b border-gray-800">
-                                    <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                  <tr className="border-b border-gray-200 dark:border-gray-800">
+                                    <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                       Symbol
                                     </td>
-                                    <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                    <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                       {strategy.params.symbol &&
                                         strategy.params.symbol}
                                     </td>
@@ -300,7 +309,7 @@ export default function OldProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -311,10 +320,10 @@ export default function OldProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between max-w-lg px-6 mx-auto">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Details
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -333,10 +342,22 @@ export default function OldProposal() {
                         </div>
                       </div>
 
-                      <div className="md:mx-auto md:max-w-lg prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose prose-p:text-white prose-strong:text-white prose-strong:text-xl !prose-headings:text-white sm:px-6 prose-li:text-white">
+                      <div className="md:mx-auto md:max-w-lg prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose dark:prose-p:text-white prose-p:text-gray-700 dark:prose-strong:text-white prose-strong:text-gray-900 prose-strong:text-xl !prose-headings:dark:text-white !prose-headings:text-gray-900 sm:px-6 dark:prose-li:text-white prose-li:text-gray-900">
                         <ReactMarkdown>
                           {graphQlProposalData.data.proposal.body}
                         </ReactMarkdown>
+                        <button
+                          type="button"
+                          className={clsx(
+                            "text-messari-blue-light",
+                            "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                            "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                            "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                          )}
+                          onClick={() => setDetailsDialogOpen(false)}
+                        >
+                          <span>Close panel</span>
+                        </button>
                       </div>
                     </div>
                   </Dialog.Panel>
@@ -347,13 +368,13 @@ export default function OldProposal() {
         </Dialog>
       </Transition.Root>
 
-      <div className="bg-messari-600">
+      <div className="bg-[#f8f9fc] dark:bg-messari-600">
         {/* Under Header */}
-        <div className="w-full bg-messari-400">
+        <div className="w-full bg-[#d6ddeb] dark:bg-messari-400">
           <div className="flex items-center justify-between py-2 mx-auto max-w-7xl xl:px-8">
             <Link
-              href="/governor"
-              className="flex text-white transition-colors hover:text-blue-500"
+              href="/"
+              className="flex text-gray-900 transition-colors dark:text-white hover:text-blue-500"
             >
               <ChevronLeftIcon className="w-6 h-6" aria-hidden="true" />
               <span>Back to all proposals</span>
@@ -368,11 +389,11 @@ export default function OldProposal() {
         </div>
 
         {/* Header */}
-        <div className="text-white border-b border-transparent shadow md:pb-28 md:bg-messari-300 bg-messari-600 md:px-8">
+        <div className="text-gray-900 bg-gray-200 border-b border-transparent shadow dark:text-white md:pb-28 dark:md:bg-messari-300 dark:bg-messari-600 md:px-8">
           {/* Header */}
           <div className="flex justify-between max-w-4xl px-4 py-6 mx-auto md:flex-row-reverse md:justify-end">
             <div>
-              <h4 className="order-2 text-gray-400 md:text-lg">
+              <h4 className="order-2 text-gray-500 dark:text-gray-400 md:text-lg">
                 {graphQlProposalData.data.proposal.space.name}
               </h4>
               <h1 className="order-1 text-xl font-bold md:text-3xl">
@@ -387,12 +408,12 @@ export default function OldProposal() {
             />
           </div>
 
-          <div className="max-w-4xl mx-auto flex items-center w-full px-4 py-2 bg-messari-600 dark:bg-transparent text-[#AED8FD] text-sm">
-            <span className="whitespace-nowrap md:text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase md:mr-1">
+          <div className="flex items-center w-full max-w-4xl px-4 py-2 mx-auto text-sm dark:bg-messari-600 dark:bg-transparent text-messari-blue-light">
+            <span className="whitespace-nowrap dark:md:text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase md:mr-1">
               Active vote
             </span>
             <span className="md:hidden">-</span>
-            <span className="flex items-center space-x-px md:mx-2 whitespace-nowrap flex-nowrap">
+            <span className="flex items-center space-x-px text-gray-900 md:mx-2 whitespace-nowrap flex-nowrap">
               5 days left to vote via
               <BoltIcon
                 className="w-3 h-3 mx-px text-amber-500"
@@ -403,7 +424,7 @@ export default function OldProposal() {
 
             <Link
               href="#"
-              className="items-center flex-grow-0 hidden px-3 py-2 ml-auto space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm md:inline-flex hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="items-center flex-grow-0 hidden px-3 py-2 ml-auto space-x-1 text-sm font-medium leading-4 text-gray-900 border border-gray-300 rounded-md shadow-sm dark:text-white md:inline-flex hover:bg-gray-100 first-letter:dark:hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
               <span>Off-Chain Vote</span>
@@ -412,9 +433,9 @@ export default function OldProposal() {
         </div>
 
         {/* Info */}
-        <div className="max-w-4xl pb-4 mx-auto text-white border-b-8 md:border-0 border-messari-500 bg-messari-600 md:-mt-16 md:rounded-md">
+        <div className="max-w-4xl pb-4 mx-auto text-gray-900 bg-white border-b-8 dark:text-white md:border-0 border-messari-500 dark:bg-messari-600 md:-mt-16 md:rounded-md">
           {/* Summary */}
-          <div className="overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="overflow-hidden md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:rounded-md md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
               <h2 className="mb-2 font-bold md:text-lg">Summary</h2>
             </div>
@@ -430,7 +451,7 @@ export default function OldProposal() {
           </div>
 
           {/* Classification */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="my-4 overflow-hidden bg-white md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:bg-messari-600 md:rounded-md md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
               <h2 className="mb-2 font-bold md:text-lg">Classification</h2>
             </div>
@@ -439,13 +460,13 @@ export default function OldProposal() {
                 <div className="flex flex-col">
                   <label
                     htmlFor="category"
-                    className="hidden text-sm text-gray-400 md:inline"
+                    className="hidden text-sm text-gray-500 dark:text-gray-400 md:inline"
                   >
                     Category
                   </label>
                   <span
                     id="category"
-                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                    className="inline-flex items-center rounded-md md:bg-transparent bg-gray-300 dark:bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-gray-900 dark:text-white mr-2"
                   >
                     Team and Operations
                   </span>
@@ -453,14 +474,14 @@ export default function OldProposal() {
                 <div className="flex flex-col">
                   <label
                     htmlFor="subcategory"
-                    className="hidden text-sm text-gray-400 md:inline"
+                    className="hidden text-sm text-gray-500 dark:text-gray-400 md:inline"
                   >
                     Sub-category
                   </label>
 
                   <span
                     id="subcategory"
-                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                    className="inline-flex items-center rounded-md md:bg-transparent bg-gray-300 dark:bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-gray-900 dark:text-white mr-2"
                   >
                     Treasury Funded Expense
                   </span>
@@ -468,14 +489,14 @@ export default function OldProposal() {
                 <div className="flex flex-col">
                   <label
                     htmlFor="importance"
-                    className="hidden text-sm text-gray-400 md:inline"
+                    className="hidden text-sm text-gray-500 dark:text-gray-400 md:inline"
                   >
                     Importance
                   </label>
 
                   <span
                     id="importance"
-                    className="inline-flex items-center space-x-1 rounded-md bg-messari-300 md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-white"
+                    className="inline-flex items-center rounded-md md:bg-transparent bg-gray-300 dark:bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-gray-900 dark:text-white mr-2"
                   >
                     <FireIcon
                       className="w-4 h-4 text-messari-blue-dark"
@@ -493,7 +514,7 @@ export default function OldProposal() {
             <h2 className="mb-2 font-bold md:hidden">Useful Links</h2>
             <Link
               href="#"
-              className="inline-flex items-center px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="inline-flex items-center px-3 py-2 space-x-1 text-sm font-medium leading-4 text-gray-900 border border-gray-300 rounded-md shadow-sm dark:text-white hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
               <span>Off-Chain Vote</span>

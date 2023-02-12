@@ -5,11 +5,18 @@ import ReactMarkdown from "react-markdown";
 import Link from "next/link";
 import Image from "next/image";
 import {
+  ArchiveBoxArrowDownIcon,
   BoltIcon,
+  ChatBubbleLeftRightIcon,
+  ChatBubbleLeftEllipsisIcon,
   CheckIcon,
   ChevronLeftIcon,
   FireIcon,
+  LockOpenIcon,
+  CalendarIcon,
   XMarkIcon,
+  PencilIcon,
+  BellIcon,
 } from "@heroicons/react/20/solid";
 import { Tab, Transition, Dialog } from "@headlessui/react";
 import daoLogo from "@/images/fwb.png";
@@ -29,10 +36,102 @@ const truncateVoteCount = (voteCount: number) => {
   }
 };
 
-export default function NewProposal() {
+enum ProposalState {
+  ActiveVote = "Active Vote",
+  Succeeded = "Succeeded",
+  Failed = "Failed",
+  PreliminaryDiscussion = "Preliminary Discussion",
+}
+
+export default function OldProposal() {
   const [votesDialogOpen, setVotesDialogOpen] = useState(false);
   const [strategiesDialogOpen, setStrategiesDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [proposalStatus, setProposalStatus] = useState<ProposalState>(
+    ProposalState.ActiveVote
+  );
+
+  function ProposalStatusBadge() {
+    const statuses = [
+      {
+        state: "Active Vote",
+        colorClasses: "bg-green-100 text-green-800",
+        icon: (
+          <ArchiveBoxArrowDownIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-800"
+            aria-hidden="true"
+          />
+        ),
+      },
+      {
+        state: "Succeeded",
+        colorClasses: "bg-green-100 text-green-800",
+        icon: (
+          <CheckIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
+            aria-hidden="true"
+          />
+        ),
+      },
+      {
+        state: "Failed",
+        colorClasses: "bg-red-100 text-red-800",
+        icon: (
+          <XMarkIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-red-400"
+            aria-hidden="true"
+          />
+        ),
+      },
+      {
+        state: "Preliminary Discussion",
+        colorClasses: "bg-gray-100 text-gray-800",
+        icon: (
+          <ChatBubbleLeftRightIcon
+            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+            aria-hidden="true"
+          />
+        ),
+      },
+    ];
+
+    return (
+      // return the correct badge based on the proposalStatus
+      <dd className="flex items-center text-sm font-medium text-gray-100 capitalize sm:mr-6">
+        <span
+          className={clsx(
+            statuses.find((status) => status.state === proposalStatus)
+              ?.colorClasses,
+            "inline-flex items-center rounded-md px-2.5 py-0.5 text-sm font-medium"
+          )}
+        >
+          {statuses.find((status) => status.state === proposalStatus)?.icon}
+          {proposalStatus}
+        </span>
+      </dd>
+    );
+  }
+
+  const debugChangeStatus = () => {
+    // set proposalStatus to whatever is the next state
+    switch (proposalStatus) {
+      case ProposalState.PreliminaryDiscussion:
+        setProposalStatus(ProposalState.ActiveVote);
+        break;
+      case ProposalState.ActiveVote:
+        setProposalStatus(ProposalState.Succeeded);
+        break;
+      case ProposalState.Succeeded:
+        setProposalStatus(ProposalState.Failed);
+        break;
+      case ProposalState.Failed:
+        setProposalStatus(ProposalState.PreliminaryDiscussion);
+        break;
+    }
+  };
+
+  const offChainVoteLink =
+    "https://snapshot.org/#/friendswithbenefits.eth/proposal/0x263facf9dc0019d86e182e0573c1239ed7fd1ecb0060abab4835c0ac1a26d1e9";
 
   return (
     <>
@@ -43,7 +142,7 @@ export default function NewProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -54,10 +153,10 @@ export default function NewProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Votes
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -78,75 +177,84 @@ export default function NewProposal() {
                       <div className="relative flex-1 px-4 mt-6 sm:px-6">
                         <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
                           <table className="min-w-full divide-y divide-gray-800">
-                            <tbody className="border-t border-gray-800 divide-y divide-gray-800">
-                            {votes.slice(0, 10).map((vote) => {
-                    const votePercentage = vote.votePercentage.toString().split(
-                        "."
-                    )[0];
-                    const widthClass = `w-${votePercentage}`;
+                            <tbody className="border-t border-gray-200 divide-y-2 divide-gray-200 dark:border-gray-800 dark:divide-gray-800">
+                              {votes.slice(0, 10).map((vote) => {
+                                const votePercentage = vote.votePercentage
+                                  .toString()
+                                  .split(".")[0];
+                                const widthClass = `w-${votePercentage}`;
 
-                    return (
-                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
-                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
-                        <div className="flex items-center justify-start space-x-1">
-                          <Image
-                            src={vote.avatar}
-                            alt="DAO Logo"
-                            className="object-cover w-6 h-6 rounded-full bg-zinc-100"
-                            priority
-                            width={24}
-                            height={24}
-                          />
-                          <Link
-                            href={`https://etherscan.io/address/${vote.address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline hover:text-messari-blue-light"
-                          >
-                            {/* truncate address */}
-                            {vote.address.length > 10
-                              ? vote.address.substring(0, 10) + "..."
-                              : vote.address}
-                          </Link>
-                        </div>
-                      </td>
+                                return (
+                                  <tr
+                                    key={vote.address}
+                                    className="grid items-center grid-cols-3 text-sm text-gray-900 md:grid-cols-5 dark:text-white justify-evenly"
+                                  >
+                                    <td className="py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
+                                      <div className="flex items-center justify-start space-x-1">
+                                        <Image
+                                          src={vote.avatar}
+                                          alt="DAO Logo"
+                                          className="object-cover w-6 h-6 rounded-full bg-zinc-100"
+                                          priority
+                                          width={24}
+                                          height={24}
+                                        />
+                                        <Link
+                                          href={`https://etherscan.io/address/${vote.address}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="hover:underline hover:text-messari-blue-light"
+                                        >
+                                          {/* truncate address */}
+                                          {vote.address.length > 10
+                                            ? vote.address.substring(0, 10) +
+                                              "..."
+                                            : vote.address}
+                                        </Link>
+                                      </div>
+                                    </td>
 
-                      <td className="py-4 whitespace-nowrap">
-                        {vote.vote}
-                      </td>
+                                    <td className="hidden py-4 md:block whitespace-nowrap">
+                                      {vote.vote}
+                                    </td>
 
-                      <td className="py-4 font-medium text-center whitespace-nowrap">
-                        {vote.voteAmount}
-                      </td>
+                                    <td className="py-4 md:hidden whitespace-nowrap">
+                                      {vote.vote.substring(0, 16) + "..."}
+                                    </td>
 
-                      <td className="w-full py-4 mx-auto font-medium">
-                        {/* Progress Bar with vote count */}
-                        <div className="w-full">
-                          <div className="rounded-full bg-messari-300">
-                            <div className={clsx(
-                                widthClass,
-                                "bg-messari-blue-dark py-1.5 rounded-full"
-                            )}>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
+                                    <td className="py-4 font-medium text-center whitespace-nowrap">
+                                      {vote.voteAmount}
+                                    </td>
 
-                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
-                        {vote.votePercentage}%
-                      </td>
-                    </tr>
-                  )
-                })}
+                                    <td className="hidden w-full py-4 mx-auto font-medium md:block">
+                                      {/* Progress Bar with vote count */}
+                                      <div className="w-full">
+                                        <div className="rounded-full bg-messari-300">
+                                          <div
+                                            className={clsx(
+                                              widthClass,
+                                              "bg-messari-blue-dark py-1.5 rounded-full"
+                                            )}
+                                          ></div>
+                                        </div>
+                                      </div>
+                                    </td>
+
+                                    <td className="hidden py-4 pr-6 font-medium text-right md:block whitespace-nowrap">
+                                      {vote.votePercentage}%
+                                    </td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                           <div
-                            className="flex items-center justify-between px-4 py-3 border-t border-gray-800 sm:px-6"
+                            className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-800 sm:px-6"
                             aria-label="Pagination"
                           >
                             <div className="flex justify-center flex-1">
                               <button
-                                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm text-messari-blue-light hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm text-messari-blue-light hover:bg-gray-100 dark:hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 border-messari-blue-light"
                                 onClick={() =>
                                   console.log("loading more votes...")
                                 }
@@ -177,7 +285,7 @@ export default function NewProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -188,10 +296,10 @@ export default function NewProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
-                        <div className="flex items-start justify-between">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                        <div className="flex items-start justify-between max-w-lg px-6 mx-auto">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Strategies
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -210,7 +318,7 @@ export default function NewProposal() {
                         </div>
                       </div>
 
-                      <div className="relative flex-1 px-4 mt-6 sm:px-6">
+                      <div className="relative flex-1 px-4 mt-6 sm:px-[30%]">
                         <table className="min-w-full divide-y divide-gray-300">
                           <tbody>
                             {graphQlProposalData.data.proposal.strategies.map(
@@ -220,7 +328,7 @@ export default function NewProposal() {
                                     <th
                                       colSpan={5}
                                       scope="colgroup"
-                                      className="py-2 text-sm font-semibold text-left text-white sm:px-6"
+                                      className="py-2 text-sm font-semibold text-left text-gray-900 dark:text-white sm:px-6"
                                     >
                                       {strategy.name}
                                     </th>
@@ -228,10 +336,10 @@ export default function NewProposal() {
 
                                   {strategy.params.address && (
                                     <tr>
-                                      <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         Address
                                       </td>
-                                      <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         <Link
                                           href={`https://etherscan.io/address/${strategy.params.address}`}
                                           target="_blank"
@@ -257,19 +365,19 @@ export default function NewProposal() {
                                   )}
                                   {strategy.params.decimals && (
                                     <tr>
-                                      <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         Decimals
                                       </td>
-                                      <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                      <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                         {strategy.params.decimals}
                                       </td>
                                     </tr>
                                   )}
-                                  <tr className="border-b border-gray-800">
-                                    <td className="py-2 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                                  <tr className="border-b border-gray-200 dark:border-gray-800">
+                                    <td className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                       Symbol
                                     </td>
-                                    <td className="py-2 text-sm text-right text-gray-400 whitespace-nowrap sm:pl-6">
+                                    <td className="py-2 text-sm text-right text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                                       {strategy.params.symbol &&
                                         strategy.params.symbol}
                                     </td>
@@ -300,7 +408,7 @@ export default function NewProposal() {
 
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
-              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none">
+              <div className="fixed inset-y-0 right-0 flex max-w-full pt-10 pointer-events-none bg-gray-900/50">
                 <Transition.Child
                   as={Fragment}
                   enter="transform transition ease-in-out duration-500 sm:duration-700"
@@ -311,10 +419,10 @@ export default function NewProposal() {
                   leaveTo="translate-y-full"
                 >
                   <Dialog.Panel className="w-screen pointer-events-auto">
-                    <div className="flex flex-col h-full py-6 overflow-y-scroll shadow-xl bg-messari-500 rounded-t-md">
+                    <div className="flex flex-col h-full py-6 overflow-y-scroll bg-white shadow-xl dark:bg-messari-500 rounded-t-md">
                       <div className="px-4 sm:px-6">
                         <div className="flex items-start justify-between max-w-lg px-6 mx-auto">
-                          <Dialog.Title className="text-lg font-medium text-white">
+                          <Dialog.Title className="text-lg font-medium text-gray-900 dark:text-white">
                             Details
                           </Dialog.Title>
                           <div className="flex items-center ml-3 h-7">
@@ -333,10 +441,22 @@ export default function NewProposal() {
                         </div>
                       </div>
 
-                      <div className="md:mx-auto md:max-w-lg prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose prose-p:text-white prose-strong:text-white prose-strong:text-xl !prose-headings:text-white sm:px-6 prose-li:text-white">
+                      <div className="md:mx-auto md:max-w-lg prose-a:text-messari-blue-light relative flex-1 px-4 mt-6 prose dark:prose-p:text-white prose-p:text-gray-700 dark:prose-strong:text-white prose-strong:text-gray-900 prose-strong:text-xl !prose-headings:dark:text-white !prose-headings:text-gray-900 sm:px-6 dark:prose-li:text-white prose-li:text-gray-900">
                         <ReactMarkdown>
                           {graphQlProposalData.data.proposal.body}
                         </ReactMarkdown>
+                        <button
+                          type="button"
+                          className={clsx(
+                            "text-messari-blue-light",
+                            "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                            "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                            "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                          )}
+                          onClick={() => setDetailsDialogOpen(false)}
+                        >
+                          <span>Close panel</span>
+                        </button>
                       </div>
                     </div>
                   </Dialog.Panel>
@@ -347,13 +467,13 @@ export default function NewProposal() {
         </Dialog>
       </Transition.Root>
 
-      <div className="bg-messari-600">
+      <div className="bg-[#f8f9fc] dark:bg-messari-600">
         {/* Under Header */}
-        <div className="w-full bg-messari-400">
+        <div className="w-full bg-[#d6ddeb] dark:bg-messari-400">
           <div className="flex items-center justify-between py-2 mx-auto max-w-7xl xl:px-8">
             <Link
               href="/governor"
-              className="flex text-white transition-colors hover:text-blue-500"
+              className="flex text-gray-900 transition-colors dark:text-white hover:text-blue-500"
             >
               <ChevronLeftIcon className="w-6 h-6" aria-hidden="true" />
               <span>Back to all proposals</span>
@@ -367,167 +487,602 @@ export default function NewProposal() {
           </div>
         </div>
 
-        {/* Header */}
-        <div className="text-white border-b border-transparent shadow md:pb-28 md:bg-messari-300 bg-messari-600 md:px-8">
-          {/* Header */}
-          <div className="flex justify-between max-w-4xl px-4 py-6 mx-auto md:flex-row-reverse md:justify-end">
-            <div>
-              <h4 className="order-2 text-gray-400 md:text-lg">
-                {graphQlProposalData.data.proposal.space.name}
-              </h4>
-              <h1 className="order-1 text-xl font-bold md:text-3xl">
-                {graphQlProposalData.data.proposal.title}
-              </h1>
-            </div>
-            <Image
-              src={daoLogo}
-              alt="DAO Logo"
-              className="object-cover w-12 h-12 rounded-full bg-zinc-100 md:h-16 md:w-16 md:mr-4"
-              priority
-            />
-          </div>
+        <main className="flex-1 dark:bg-messari-600">
+          <div className="pb-4">
+            <div className="max-w-3xl px-4 mx-auto sm:px-6 lg:px-8 xl:grid xl:max-w-5xl xl:grid-cols-3">
+              <div className="xl:col-span-2 xl:border-r xl:border-gray-200 xl:pr-8 xl:dark:border-gray-800">
+                <div className="px-6 py-4 my-4 overflow-hidden bg-white rounded-md shadow dark:bg-messari-300">
+                  <div>
+                    <div className="md:flex md:items-end md:justify-between md:space-x-4 xl:border-b dark:border-gray-800 xl:pb-2">
+                      <div className="flex justify-start md:space-x-5">
+                        <div>
+                          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                            {graphQlProposalData.data.proposal.title}
+                          </h1>
+                          <h4 className="order-2 mb-1 text-gray-500 dark:text-gray-400 md:text-lg">
+                            {graphQlProposalData.data.proposal.space.name}
+                          </h4>
 
-          <div className="max-w-4xl mx-auto flex items-center w-full px-4 py-2 bg-messari-600 dark:bg-transparent text-[#AED8FD] text-sm">
-            <span className="whitespace-nowrap md:text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase md:mr-1">
-              Active vote
-            </span>
-            <span className="md:hidden">-</span>
-            <span className="flex items-center space-x-px md:mx-2 whitespace-nowrap flex-nowrap">
-              5 days left to vote via
-              <BoltIcon
-                className="w-3 h-3 mx-px text-amber-500"
-                aria-hidden="true"
-              />
-              Off-Chain Vote
-            </span>
+                          <ProposalStatusBadge />
 
-            <Link
-              href="#"
-              className="items-center flex-grow-0 hidden px-3 py-2 ml-auto space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm md:inline-flex hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
-              <span>Off-Chain Vote</span>
-            </Link>
-          </div>
-        </div>
+                          <span className="flex items-center mt-4 space-x-px dark:text-white whitespace-nowrap flex-nowrap">
+                            5 days left to vote via
+                            <BoltIcon
+                              className="w-3 h-3 mx-px text-amber-500"
+                              aria-hidden="true"
+                            />
+                            Off-Chain Vote
+                          </span>
+                        </div>
+                        <Image
+                          src={daoLogo}
+                          alt="DAO Logo"
+                          className="object-cover w-16 h-16 border border-gray-400 rounded-full shadow-inner bg-zinc-100 md:mr-4"
+                          priority
+                        />
+                      </div>
+                      <div className="flex items-end justify-end mt-4 space-x-3 md:mt-0">
+                        <Link
+                          href={offChainVoteLink}
+                          className="inline-flex items-center flex-grow-0 px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white rounded-md shadow-sm hover:bg-messari-blue-dark bg-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        >
+                          <span>Off-Chain Vote</span>
+                          <ArrowTopRightOnSquareIcon
+                            className="w-4 h-4"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </div>
+                    </div>
 
-        {/* Info */}
-        <div className="max-w-4xl pb-4 mx-auto text-white border-b-8 md:border-0 border-messari-500 bg-messari-600 md:-mt-16 md:rounded-md">
-          {/* Summary */}
-          <div className="overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
-            <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold md:text-lg">Summary</h2>
-            </div>
-            <div className="px-4 pb-2 md:py-4 md:px-6">
-              <p>
-                This proposal aims to confirm the production of the FWB FEST
-                2023 from Aug. 10-13, 2023. The proposal recommends tickets be
-                priced at $399 for members and $499 for non-members and projects
-                profits from $63,980 - $522,980 depending on the amount of
-                tickets sold.
-              </p>
-            </div>
-          </div>
+                    <aside className="mt-8 xl:hidden">
+                      <h2 className="sr-only">Details</h2>
+                      <div className="space-y-5">
+                        <ProposalStatusBadge />
 
-          {/* Classification */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
-            <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold md:text-lg">Classification</h2>
-            </div>
-            <div className="px-4 pb-2 md:py-4 md:px-6">
-              <div className="flex flex-wrap gap-y-1 md:gap-x-10">
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="category"
-                    className="hidden text-sm text-gray-400 md:inline"
-                  >
-                    Category
-                  </label>
-                  <span
-                    id="category"
-                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
-                  >
-                    Team and Operations
-                  </span>
+                        <div className="flex items-center space-x-2">
+                          <CalendarIcon
+                            className="w-5 h-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">
+                            Created on{" "}
+                            <time dateTime="2020-12-02">Dec 2, 2020</time>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="py-6 mt-6 space-y-8 border-t border-b border-gray-200 dark:border-gray-800">
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            Assignees
+                          </h2>
+                          <ul role="list" className="mt-3 space-y-3">
+                            <li className="flex justify-start">
+                              <a
+                                href="#"
+                                className="flex items-center space-x-3"
+                              >
+                                <div className="flex-shrink-0">
+                                  <img
+                                    className="w-5 h-5 rounded-full"
+                                    src="https://images.unsplash.com/photo-1520785643438-5bf77931f493?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
+                                    alt=""
+                                  />
+                                </div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                  Eduardo Benz
+                                </div>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div>
+                          <h2 className="text-sm font-medium text-gray-500">
+                            Classification
+                          </h2>
+                          <div className="pb-2 md:py-4 md:px-6">
+                            <div className="flex flex-wrap gap-y-1 md:gap-x-10">
+                              <div className="flex flex-col">
+                                <label
+                                  htmlFor="category"
+                                  className="hidden text-sm text-gray-400 md:inline"
+                                >
+                                  Category
+                                </label>
+                                <span
+                                  id="category"
+                                  className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                                >
+                                  Team and Operations
+                                </span>
+                              </div>
+                              <div className="flex flex-col">
+                                <label
+                                  htmlFor="subcategory"
+                                  className="hidden text-sm text-gray-400 md:inline"
+                                >
+                                  Sub-category
+                                </label>
+
+                                <span
+                                  id="subcategory"
+                                  className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
+                                >
+                                  Treasury Funded Expense
+                                </span>
+                              </div>
+                              <div className="flex flex-col">
+                                <label
+                                  htmlFor="importance"
+                                  className="hidden text-sm text-gray-400 md:inline"
+                                >
+                                  Importance
+                                </label>
+
+                                <span
+                                  id="importance"
+                                  className="inline-flex items-center space-x-1 rounded-md bg-messari-300 md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-white"
+                                >
+                                  <FireIcon
+                                    className="w-4 h-4 text-messari-blue-dark"
+                                    aria-hidden="true"
+                                  />
+                                  <span>Medium</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </aside>
+                    <div className="py-3 xl:pt-6 xl:pb-0">
+                      <h2 className="sr-only">Description</h2>
+                      <div className="prose max-w-none dark:text-gray-200">
+                        <p>
+                          This proposal aims to confirm the production of the
+                          FWB FEST 2023 from Aug. 10-13, 2023. The proposal
+                          recommends tickets be priced at $399 for members and
+                          $499 for non-members and projects profits from $63,980
+                          - $522,980 depending on the amount of tickets sold.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="subcategory"
-                    className="hidden text-sm text-gray-400 md:inline"
-                  >
-                    Sub-category
-                  </label>
 
-                  <span
-                    id="subcategory"
-                    className="inline-flex items-center rounded-md md:bg-transparent bg-messari-300 md:px-0 px-2.5 py-0.5 text-sm md:text-md font-medium text-white mr-2"
-                  >
-                    Treasury Funded Expense
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="importance"
-                    className="hidden text-sm text-gray-400 md:inline"
-                  >
-                    Importance
-                  </label>
+                {/* Regular content for screens md and up */}
+                <div className="hidden max-w-4xl py-4 mx-auto my-2 border-t border-b border-gray-200 dark:shadow dark:border-gray-800 md:block">
 
-                  <span
-                    id="importance"
-                    className="inline-flex items-center space-x-1 rounded-md bg-messari-300 md:bg-transparent md:px-0 px-2.5 py-0.5 text-sm font-medium md:text-md text-white"
-                  >
-                    <FireIcon
-                      className="w-4 h-4 text-messari-blue-dark"
-                      aria-hidden="true"
-                    />
-                    <span>Medium</span>
-                  </span>
+                  {/* Active Vote */}
+                  <div className="overflow-hidden md:rounded-md">
+                    <div className="flex items-baseline justify-between w-full pt-2">
+                      <h2 className="mb-2 font-bold dark:text-white md:text-lg">
+                        Active Vote
+                      </h2>
+                      <h4 className="mr-2 text-sm text-gray-500 dark:text-white">
+                        Voting ends in 5 days
+                      </h4>
+                    </div>
+                    <div className="pb-2 md:py-4">
+
+                      <div className="flex flex-col">
+                        {proposalVoteOptions.map((option) => (
+                          <div className="flex flex-col" key={option.title}>
+                            <div className="flex justify-between">
+                              <span className="text-sm dark:text-white">
+                                {option.title}
+                              </span>
+                              <span className="dark:text-white">
+                                {option.percentage.toString()}%
+                              </span>
+                            </div>
+
+                            {/* Progress Bar with vote count */}
+                            <div className="">
+                              <div className="bg-gray-400 rounded-full dark:bg-messari-300">
+                                <div
+                                  className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
+                                >
+                                  <p className="text-xs dark:text-white whitespace-nowrap indent-2">
+                                    {truncateVoteCount(option.voteCount)} Votes
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    <div className="flex items-center justify-start mt-4 space-x-3">
+                        <Link
+                          href={offChainVoteLink}
+                          className="inline-flex items-center flex-grow-0 px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white rounded-md shadow-sm hover:bg-messari-blue-dark bg-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span>Vote on Snapshot</span>
+                          <ArrowTopRightOnSquareIcon
+                            className="w-4 h-4"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Voters */}
+                  <div className="overflow-hidden md:divide-y dark:md:divide-gray-800 md:rounded-md">
+                    <div className="pt-2 md:pt-4">
+                      <h2 className="mb-2 font-bold dark:text-white md:text-lg">
+                        Voters
+                      </h2>
+                    </div>
+                    <div className="overflow-hidden md:mb-4">
+                      <table className="min-w-full divide-y divide-gray-800">
+                        <tbody className="divide-y divide-gray-200 rounded-md dark:divide-gray-800">
+                          {votes.slice(0, 5).map((vote) => {
+                            const votePercentage = vote.votePercentage
+                              .toString()
+                              .split(".")[0];
+                            const widthClass = `w-${votePercentage}`;
+
+                            return (
+                              <tr
+                                key={vote.address}
+                                className="grid items-center grid-cols-5 text-sm text-gray-900 dark:text-white justify-evenly"
+                              >
+                                <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-2">
+                                  <div className="flex items-center justify-start space-x-1">
+                                    <Image
+                                      src={vote.avatar}
+                                      alt="DAO Logo"
+                                      className="object-cover w-6 h-6 rounded-full bg-zinc-100"
+                                      priority
+                                      width={24}
+                                      height={24}
+                                    />
+                                    <Link
+                                      href={`https://etherscan.io/address/${vote.address}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-gray-900 dark:text-white hover:underline hover:text-messari-blue-light"
+                                    >
+                                      {/* truncate address */}
+                                      {vote.address.length > 10
+                                        ? vote.address.substring(0, 10) + "..."
+                                        : vote.address}
+                                    </Link>
+                                  </div>
+                                </td>
+
+                                <td className="py-4 whitespace-nowrap">
+                                  {vote.vote.substring(0,16) + "..."}
+                                </td>
+
+                                <td className="py-4 font-medium text-center whitespace-nowrap">
+                                  {vote.voteAmount}
+                                </td>
+
+                                <td className="w-full py-4 mx-auto font-medium">
+                                  {/* Progress Bar with vote count */}
+                                  <div className="w-full">
+                                    <div className="bg-gray-400 rounded-full dark:bg-messari-300">
+                                      <div
+                                        className={clsx(
+                                          widthClass,
+                                          "bg-messari-blue-dark py-1.5 rounded-full"
+                                        )}
+                                      ></div>
+                                    </div>
+                                  </div>
+                                </td>
+
+                                <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
+                                  {vote.votePercentage}%
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                      <div
+                        className="flex items-center justify-between py-3 text-white border-t border-gray-200 dark:border-gray-800 sm:px-6"
+                        aria-label="Pagination"
+                      >
+                        <button
+                          className={clsx(
+                            "text-messari-blue-light",
+                            "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                            "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                            "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                          )}
+                          onClick={() => setVotesDialogOpen(true)}
+                        >
+                          View All 51 Voters
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
+
+              {/* XL screens sidebar */}
+              <aside className="hidden xl:block xl:pl-8">
+                <h2 className="sr-only">Details</h2>
+                <div className="space-y-5">
+
+                {/* Key Info */}
+                <div className="pt-4 overflow-hidden divide-gray-200 md:divide-y dark:divide-gray-800 md:rounded-md">
+                    <div className="px-4 pt-2 md:px-6">
+                      <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-lg">
+                        Key Info
+                      </h2>
+                    </div>
+                    <div className="px-4 pb-2 md:py-4 md:px-6">
+                      <div className="grid min-w-full grid-cols-1 gap-x-1">
+                        <div className="flex justify-between">
+                          <span className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Author
+                          </span>
+                          <span className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <Link
+                              href="https://etherscan.io/address/drewcoffman.eth"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-end text-messari-blue-light"
+                            >
+                              <span className="hover:underline">
+                                drewcoffman.eth
+                              </span>
+                              <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                            </Link>
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Author Type
+                          </span>
+                          <span className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            Core
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Strategies
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <button
+                              className="text-messari-blue-light hover:underline"
+                              onClick={() => setStrategiesDialogOpen(true)}
+                            >
+                              3 strategies
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            IPFS
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <Link
+                              href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-end text-messari-blue-light"
+                            >
+                              <span className="hover:underline">#bafkrei</span>
+                              <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                            </Link>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Voting System
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <span>Single choice voting</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Snapshot Block
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <Link
+                              href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-end text-messari-blue-light"
+                            >
+                              <span className="hover:underline">
+                                {graphQlProposalData.data.proposal.snapshot}
+                              </span>
+                              <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
+                            </Link>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Start Date
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <span>Feb 7, 2023</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            End Date
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <span>Feb 14, 2023</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Total Votes Cast
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <span>
+                              {truncateVoteCount(
+                                graphQlProposalData.data.proposal.scores.reduce(
+                                  (acc, curr) => (acc += curr)
+                                )
+                              )}{" "}
+                              Votes
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
+                            Total Voters
+                          </div>
+                          <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
+                            <span>
+                              {graphQlProposalData.data.proposal.votes} Voters
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                  {/* Details button */}
+                  <div>
+                    <button
+                     className={clsx(
+                      "text-messari-blue-light",
+                      "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                      "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                      "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                    )}
+                      onClick={() => setDetailsDialogOpen(true)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Category Badges */}
+                <div className="py-6 mt-6 space-y-8 border-t border-gray-200 dark:border-gray-800">
+                  <div>
+                    <div>
+                      <h2 className="sr-only">
+                        Classification
+                      </h2>
+                      <div className="pb-2 ">
+                        <div className="flex flex-col gap-y-1 ">
+                          <div className="flex flex-col">
+                            <label
+                              htmlFor="category"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Category
+                            </label>
+                            <span
+                              id="category"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              Team and Operations
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <label
+                              htmlFor="subcategory"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Sub-category
+                            </label>
+
+                            <span
+                              id="subcategory"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              Treasury Funded Expense
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <label
+                              htmlFor="importance"
+                              className="text-sm text-gray-500 dark:text-gray-400"
+                            >
+                              Importance
+                            </label>
+
+                            <span
+                              id="importance"
+                              className="inline-flex items-center flex-grow-0 rounded-md bg-gray-100 text-gray-800 dark:bg-messari-300 px-2.5 py-0.5 text-sm md:text-md font-medium dark:text-white mr-2"
+                            >
+                              <FireIcon
+                                className="w-4 h-4 text-messari-blue-dark"
+                                aria-hidden="true"
+                              />
+                              <span>Medium</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
           </div>
-
-          {/* Useful Links */}
-          <div className="px-4 py-4 md:hidden">
-            <h2 className="mb-2 font-bold md:hidden">Useful Links</h2>
-            <Link
-              href="#"
-              className="inline-flex items-center px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 hover:border-messari-blue-light focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              <GlobeAltIcon className="w-4 h-4" aria-hidden="true" />
-              <span>Off-Chain Vote</span>
-            </Link>
-          </div>
-        </div>
+        </main>
 
         {/* Tabs for screens smaller than md */}
         <Tab.Group
           as="div"
-          className="px-4 py-6 mb-2 border-t border-gray-800 shadow inset-1 md:hidden bg-messari-600 md:px-8"
+          className="px-4 py-6 bg-white border-t border-gray-200 shadow dark:border-gray-800 inset-1 md:hidden dark:bg-messari-600 md:px-8"
         >
           <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold text-white md:text-2xl">
+            <h2 className="mb-2 font-bold dark:text-white md:text-2xl">
               Off-Chain Vote
             </h2>
 
-            <span className="text-sm uppercase text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase">
+            <span className="px-4 py-px text-sm uppercase border text-messari-blue-light border-messari-blue-light md:uppercase">
               active vote
             </span>
           </div>
-          <span className="text-sm text-gray-400">Started 2 days ago</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Started 2 days ago
+          </span>
 
-          <Tab.List className="flex justify-between mx-auto my-4 space-x-2">
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+          <Tab.List className="flex justify-between w-full mx-auto my-4 space-x-2">
+            <Tab
+              className={clsx(
+                "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
+                "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+              )}
+            >
               Active Vote
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab
+              className={clsx(
+                "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
+                "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+              )}
+            >
               Voters
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab
+              className={clsx(
+                "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
+                "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+              )}
+            >
               Key Info
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab
+              className={clsx(
+                "ui-selected:border-messari-blue-light ui-seleced:text-gray-900 dark:ui-selected:text-white ui-selected:dark:bg-gray-800",
+                "ui-not-selected:border-transparent ui-not-selected:text-gray-500 ui-not-selected:hover:text-gray-900 dark:ui-not-selected:hover:text-gray-200 ui-not-selected:hover:border-messari-blue-light",
+                "w-1/4 py-4 px-1 text-center border-b-2 font-medium text-sm rounded rounded-b-none"
+              )}
+            >
               Details
             </Tab>
           </Tab.List>
@@ -535,22 +1090,24 @@ export default function NewProposal() {
           <Tab.Panels className="text-white">
             {/* Active Vote */}
             <Tab.Panel>
-              <h4 className="mr-2 text-sm font-medium text-white">
+              <h4 className="mr-2 text-sm text-gray-500 dark:text-white">
                 Voting ends in 5 days
               </h4>
               <div className="flex flex-col mt-4">
                 {proposalVoteOptions.map((option) => (
                   <div className="flex flex-col" key={option.title}>
                     <div className="flex justify-between">
-                      <span className="text-sm text-white">{option.title}</span>
-                      <span className="text-white">
+                      <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        {option.title}
+                      </span>
+                      <span className="text-gray-900 dark:text-white">
                         {option.percentage.toString()}%
                       </span>
                     </div>
 
                     {/* Progress Bar with vote count */}
                     <div className="">
-                      <div className="rounded-full bg-messari-300">
+                      <div className="bg-gray-400 rounded-full dark:bg-messari-300">
                         <div
                           className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
                         >
@@ -569,10 +1126,13 @@ export default function NewProposal() {
             <Tab.Panel>
               <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-800">
-                  <tbody className="divide-y divide-gray-800 bg-messari-600">
+                  <tbody className="divide-y-2 divide-gray-200 dark:divide-gray-800 dark:bg-messari-600">
                     {votes.slice(0, 5).map((vote) => (
-                      <tr key={vote.address} className="text-sm text-white">
-                        <td className="py-4 pl-4 pr-3 font-medium text-white whitespace-nowrap sm:pl-6">
+                      <tr
+                        key={vote.address}
+                        className="text-sm text-gray-900 dark:text-white"
+                      >
+                        <td className="py-4 pl-4 pr-3 font-medium whitespace-nowrap sm:pl-6">
                           <div className="flex items-center justify-start space-x-1">
                             <Image
                               src={vote.avatar}
@@ -602,7 +1162,7 @@ export default function NewProposal() {
                         <td className="hidden py-4 pl-3 pr-4 font-medium text-right sm:table-cell whitespace-nowrap sm:pr-6">
                           {/* Progress Bar with vote count */}
                           <div className="">
-                            <div className="rounded-full bg-messari-300">
+                            <div className="bg-white rounded-full dark:bg-messari-300">
                               <div className="bg-messari-blue-dark rounded-full w-[90%]">
                                 %
                               </div>
@@ -614,11 +1174,16 @@ export default function NewProposal() {
                   </tbody>
                 </table>
                 <div
-                  className="flex items-center justify-between py-3 border-t border-gray-800 bg-messari-600 sm:px-6"
+                  className="flex items-center justify-between py-3 mx-2 border-t border-gray-200 dark:border-gray-800 dark:bg-messari-600 sm:px-6"
                   aria-label="Pagination"
                 >
                   <button
-                    className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                    className={clsx(
+                      "text-messari-blue-light",
+                      "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                      "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                      "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                    )}
                     onClick={() => setVotesDialogOpen(true)}
                   >
                     View All 51 Voters
@@ -633,7 +1198,7 @@ export default function NewProposal() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <tbody>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Author
                       </td>
                       <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
@@ -651,18 +1216,18 @@ export default function NewProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Author Type
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Core</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Strategies
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <button
                           className="text-messari-blue-light hover:underline"
                           onClick={() => setStrategiesDialogOpen(true)}
@@ -672,10 +1237,10 @@ export default function NewProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         IPFS
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <Link
                           href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
                           target="_blank"
@@ -688,18 +1253,18 @@ export default function NewProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Voting System
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Single choice voting</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Snapshot Block
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <Link
                           href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
                           target="_blank"
@@ -714,26 +1279,26 @@ export default function NewProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Start Date
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Feb 7, 2023</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         End Date
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Feb 14, 2023</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Total Votes Cast
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>
                           {truncateVoteCount(
                             graphQlProposalData.data.proposal.scores.reduce(
@@ -745,10 +1310,10 @@ export default function NewProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Total Voters
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>
                           {graphQlProposalData.data.proposal.votes} Voters
                         </span>
@@ -760,7 +1325,12 @@ export default function NewProposal() {
             </Tab.Panel>
             <Tab.Panel>
               <button
-                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                className={clsx(
+                  "text-messari-blue-light",
+                  "flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm",
+                  "hover:bg-gray-100 dark:hover:bg-messari-300/60 border-messari-blue-light",
+                  "focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 focus:outline-none"
+                )}
                 onClick={() => setDetailsDialogOpen(true)}
               >
                 View Details
@@ -769,297 +1339,19 @@ export default function NewProposal() {
           </Tab.Panels>
         </Tab.Group>
 
-        {/* Regular content for screens md and up */}
-        <div className="hidden max-w-4xl py-10 mx-auto my-2 border-t border-b border-gray-800 shadow md:block bg-messari-600">
-          <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold text-white md:text-2xl">
-              Off-Chain Vote
-            </h2>
-
-            <span className="text-sm uppercase text-messari-blue-light md:border md:border-messari-blue-light md:px-4 md:py-px md:uppercase">
-              active vote
-            </span>
-          </div>
-          <span className="text-sm text-gray-400">Started 2 days ago</span>
-
-          {/* Active Vote */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
-            <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">
-                Active Vote
-              </h2>
-            </div>
-            <div className="px-4 pb-2 md:py-4 md:px-6">
-              <h4 className="mr-2 text-sm font-medium text-white">
-                Voting ends in 5 days
-              </h4>
-              <div className="flex flex-col mt-4">
-                {proposalVoteOptions.map((option) => (
-                  <div className="flex flex-col" key={option.title}>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-white">{option.title}</span>
-                      <span className="text-white">
-                        {option.percentage.toString()}%
-                      </span>
-                    </div>
-
-                    {/* Progress Bar with vote count */}
-                    <div className="">
-                      <div className="rounded-full bg-messari-300">
-                        <div
-                        //   className={`bg-messari-blue-dark rounded-full w-[1%]`}
-                          className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
-                        >
-                          <p className="text-xs text-white whitespace-nowrap indent-2">
-                            {truncateVoteCount(option.voteCount)} Votes
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Voters */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
-            <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">Voters</h2>
-            </div>
-            <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-800">
-                <tbody className="divide-y divide-gray-800">
-                  {votes.slice(0, 5).map((vote) => {
-                    const votePercentage = vote.votePercentage.toString().split(
-                        "."
-                    )[0];
-                    const widthClass = `w-${votePercentage}`;
-
-                    return (
-                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
-                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
-                        <div className="flex items-center justify-start space-x-1">
-                          <Image
-                            src={vote.avatar}
-                            alt="DAO Logo"
-                            className="object-cover w-6 h-6 rounded-full bg-zinc-100"
-                            priority
-                            width={24}
-                            height={24}
-                          />
-                          <Link
-                            href={`https://etherscan.io/address/${vote.address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline hover:text-messari-blue-light"
-                          >
-                            {/* truncate address */}
-                            {vote.address.length > 10
-                              ? vote.address.substring(0, 10) + "..."
-                              : vote.address}
-                          </Link>
-                        </div>
-                      </td>
-
-                      <td className="py-4 whitespace-nowrap">
-                        {vote.vote}
-                      </td>
-
-                      <td className="py-4 font-medium text-center whitespace-nowrap">
-                        {vote.voteAmount}
-                      </td>
-
-                      <td className="w-full py-4 mx-auto font-medium">
-                        {/* Progress Bar with vote count */}
-                        <div className="w-full">
-                          <div className="rounded-full bg-messari-300">
-                            <div className={clsx(
-                                widthClass,
-                                "bg-messari-blue-dark py-1.5 rounded-full"
-                            )}>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-
-                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
-                        {vote.votePercentage}%
-                      </td>
-                    </tr>
-                  )
-                })}
-                </tbody>
-              </table>
-              <div
-                className="flex items-center justify-between py-3 text-white border-t border-gray-800 sm:px-6"
-                aria-label="Pagination"
-              >
-                <button
-                  className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
-                  onClick={() => setVotesDialogOpen(true)}
-                >
-                  View All 51 Voters
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Key Info */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
-            <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">Key Info</h2>
-            </div>
-            <div className="px-4 pb-2 md:py-4 md:px-6">
-              <div className="grid min-w-full grid-cols-2 gap-x-10">
-                <div className="flex justify-between">
-                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Author
-                  </span>
-                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <Link
-                      href="https://etherscan.io/address/drewcoffman.eth"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-end text-messari-blue-light"
-                    >
-                      <span className="hover:underline">drewcoffman.eth</span>
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
-                    </Link>
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Author Type
-                  </span>
-                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    Core
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Strategies
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <button
-                      className="text-messari-blue-light hover:underline"
-                      onClick={() => setStrategiesDialogOpen(true)}
-                    >
-                      3 strategies
-                    </button>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    IPFS
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <Link
-                      href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-end text-messari-blue-light"
-                    >
-                      <span className="hover:underline">#bafkrei</span>
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
-                    </Link>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Voting System
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <span>Single choice voting</span>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Snapshot Block
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <Link
-                      href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-end text-messari-blue-light"
-                    >
-                      <span className="hover:underline">
-                        {graphQlProposalData.data.proposal.snapshot}
-                      </span>
-                      <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" />
-                    </Link>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Start Date
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <span>Feb 7, 2023</span>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    End Date
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <span>Feb 14, 2023</span>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Total Votes Cast
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <span>
-                      {truncateVoteCount(
-                        graphQlProposalData.data.proposal.scores.reduce(
-                          (acc, curr) => (acc += curr)
-                        )
-                      )}{" "}
-                      Votes
-                    </span>
-                  </div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
-                    Total Voters
-                  </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
-                    <span>
-                      {graphQlProposalData.data.proposal.votes} Voters
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Details button */}
-          <div>
-            <button
-              className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
-              onClick={() => setDetailsDialogOpen(true)}
-            >
-              View Details
-            </button>
-          </div>
-        </div>
-
         {/* Related Proposals */}
-        <div className="max-w-4xl py-6 mx-auto text-white border-t-8 shadow md:border-0 border-messari-500 bg-messari-600">
-          <h2 className="mb-2 font-bold text-white md:text-2xl">
+        <div className="max-w-5xl px-4 py-6 mx-auto text-white border-t-8 border-transparent md:px-8 dark:shadow-lg md:border-0 dark:border-messari-500 dark:bg-messari-600">
+          <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-2xl">
             Related Proposals
           </h2>
 
           {/* List */}
           <div>
-            <ul role="list" className="space-y-2">
+            <ul role="list" className="space-y-3">
               {relatedProposals.map((proposal) => (
                 <li
                   key={proposal.title}
-                  className="flex items-start justify-between px-4 py-4 overflow-hidden text-sm rounded-md shadow md:justify-end md:items-center md:flex-row-reverse bg-messari-500 sm:px-6"
+                  className="flex items-start justify-between px-6 py-4 overflow-hidden text-sm bg-white rounded-md shadow md:justify-end md:items-center md:flex-row-reverse dark:bg-messari-500 sm:px-6"
                 >
                   <div className="hidden md:ml-auto md:flex md:flex-col">
                     <span
@@ -1072,19 +1364,19 @@ export default function NewProposal() {
                     >
                       {proposal.status}
                     </span>
-                    <p className="hidden pt-2 text-right text-gray-400 md:block">
+                    <p className="hidden pt-2 text-right text-gray-500 dark:text-gray-400 md:block">
                       {proposal.created}
                     </p>
                   </div>
                   <div>
                     <Link
                       href="#"
-                      className="font-bold hover:underline hover:text-messari-blue-light md:text-lg md:font-normal"
+                      className="font-bold text-gray-900 dark:text-white hover:underline hover:text-messari-blue-light md:text-lg md:font-normal"
                     >
                       {proposal.title}
                     </Link>
 
-                    <h4 className="mb-2 text-gray-400 md:text-md">
+                    <h4 className="mb-2 text-gray-500 dark:text-gray-400 md:text-md">
                       {proposal.dao}
                     </h4>
 
@@ -1123,7 +1415,7 @@ export default function NewProposal() {
                         <span>{proposal.priority}</span>
                       </span>
                     </div>
-                    <p className="text-gray-400 md:hidden">
+                    <p className="text-gray-500 dark:text-gray-400 md:hidden">
                       Created {proposal.created}
                     </p>
                   </div>
@@ -1213,7 +1505,7 @@ const votes = [
     address: "0x7AE41835444183A23bAA10EbfdF2997D10130f5d",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "700 FWB",
-      votePercentage: 4.19,
+    votePercentage: 4.19,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x7AE41835444183A23bAA10EbfdF2997D10130f5d?s=36",
   },
@@ -1221,7 +1513,7 @@ const votes = [
     address: "drewcoffman.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "551 FWB",
-      votePercentage: 3.29,
+    votePercentage: 3.29,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0xc7A0D765C3aF6E2710bA05A56c5E2cA190C2E11e?s=36",
   },
@@ -1229,7 +1521,7 @@ const votes = [
     address: "kirkusmaximus.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "543 FWB",
-      votePercentage: 3.25,
+    votePercentage: 3.25,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x2afE4De9D1C679E42C03649D86FFDDDc07751AE6?s=36",
   },
@@ -1237,7 +1529,7 @@ const votes = [
     address: "0xE802A4D7dBB8c2010b336A49f86a765a7eb0Dce8",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "450 FWB",
-      votePercentage: 3,
+    votePercentage: 3,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0xE802A4D7dBB8c2010b336A49f86a765a7eb0Dce8?s=36",
   },
@@ -1245,7 +1537,7 @@ const votes = [
     address: "gbresnitz.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "385 FWB",
-      votePercentage: 2.5,
+    votePercentage: 2.5,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x473e95Ac3646D286651aDF5Fa736368DFdCf9605?s=36",
   },
@@ -1253,7 +1545,7 @@ const votes = [
     address: "0x7d8D2c8EA18f9a3Da11066f02057DAd708f97e8F",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "365 FWB",
-      votePercentage: 2.4,
+    votePercentage: 2.4,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x7d8D2c8EA18f9a3Da11066f02057DAd708f97e8F?s=36",
   },
@@ -1261,7 +1553,7 @@ const votes = [
     address: "quintela.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "322 FWB",
-      votePercentage: 2.3,
+    votePercentage: 2.3,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x26982bdD9A25dEa454d62B5BeC236B4ECd0A5b0b?s=36",
   },
@@ -1269,7 +1561,7 @@ const votes = [
     address: "fabiolaio.eth",
     vote: "Yes: Approve FWB Fest 2023",
     voteAmount: "261 FWB",
-      votePercentage: 2,
+    votePercentage: 2,
     avatar:
       "https://cdn.stamp.fyi/avatar/eth:0x06A61Fd03051ae191C5c0321324c85Db11340bc7?s=36",
   },

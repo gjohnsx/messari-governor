@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import avatarImage from '@/images/avatar.jpg'
 import clsx from 'clsx';
+import { ThemeSelector } from '@/components/ThemeSelector';
 
 const navigation = [
   { name: 'Product', href: '#' },
@@ -19,7 +20,7 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white isolate">
+    <div className="min-h-screen bg-white dark:bg-gray-900 isolate">
       <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
         <svg
           className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
@@ -62,16 +63,17 @@ export default function HomePage() {
               />
             </Link>
           </div>
+          <ThemeSelector className="mr-8" />
         </nav>
       </div>
       <main>
         <div className="relative px-6 lg:px-8">
           <div className="max-w-2xl py-32 mx-auto sm:py-48 lg:py-56">
             <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
                 My application for Frontend Engineer
               </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
+              <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-200">
                 Redefining the user experience for Messari Governor, I reimagined the Governor platform with a focus on simplicity and clarity. 
               </p>
               <div className="flex items-center justify-center mt-10 gap-x-6">
@@ -81,7 +83,7 @@ export default function HomePage() {
                 >
                   Visit the new Governor
                 </Link>
-                <Link href="https://github.com/gjohnsx/messari-governor" target="_blank" rel="noreferrer" className="text-base font-semibold leading-7 text-gray-900">
+                <Link href="https://github.com/gjohnsx/messari-governor" target="_blank" rel="noreferrer" className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
                   Github <span aria-hidden="true">→</span>
                 </Link>
               </div>

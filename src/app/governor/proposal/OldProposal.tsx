@@ -389,7 +389,7 @@ export default function OldProposal() {
         </div>
 
         {/* Header */}
-        <div className="text-gray-900 bg-gray-200 border-b border-transparent shadow dark:text-white md:pb-28 dark:md:bg-messari-300 dark:bg-messari-600 md:px-8">
+        <div className="text-gray-900 bg-white border-b border-transparent shadow dark:text-white md:pb-28 dark:md:bg-messari-300 dark:bg-messari-600 md:px-8">
           {/* Header */}
           <div className="flex justify-between max-w-4xl px-4 py-6 mx-auto md:flex-row-reverse md:justify-end">
             <div>
@@ -413,7 +413,7 @@ export default function OldProposal() {
               Active vote
             </span>
             <span className="md:hidden">-</span>
-            <span className="flex items-center space-x-px text-gray-900 md:mx-2 whitespace-nowrap flex-nowrap">
+            <span className="flex items-center space-x-px text-gray-900 dark:text-gray-400 md:mx-2 whitespace-nowrap flex-nowrap">
               5 days left to vote via
               <BoltIcon
                 className="w-3 h-3 mx-px text-amber-500"
@@ -433,9 +433,9 @@ export default function OldProposal() {
         </div>
 
         {/* Info */}
-        <div className="max-w-4xl pb-4 mx-auto text-gray-900 bg-white border-b-8 dark:text-white md:border-0 border-messari-500 dark:bg-messari-600 md:-mt-16 md:rounded-md">
+        <div className="max-w-4xl pb-4 mx-auto text-gray-900 border-b-8 dark:text-white md:border-0 dark:border-messari-500 border-[#f8f9fc] md:-mt-16 md:rounded-md">
           {/* Summary */}
-          <div className="overflow-hidden md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="overflow-hidden bg-white dark:bg-messari-600 md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:rounded-md md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
               <h2 className="mb-2 font-bold md:text-lg">Summary</h2>
             </div>
@@ -525,10 +525,10 @@ export default function OldProposal() {
         {/* Tabs for screens smaller than md */}
         <Tab.Group
           as="div"
-          className="px-4 py-6 mb-2 border-t border-gray-800 shadow inset-1 md:hidden bg-messari-600 md:px-8"
+          className="px-4 py-6 mb-2 bg-white border-t border-gray-200 shadow dark:border-gray-800 inset-1 md:hidden dark:bg-messari-600 md:px-8"
         >
           <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold text-white md:text-2xl">
+            <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-2xl">
               Off-Chain Vote
             </h2>
 
@@ -536,42 +536,42 @@ export default function OldProposal() {
               active vote
             </span>
           </div>
-          <span className="text-sm text-gray-400">Started 2 days ago</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">Started 2 days ago</span>
 
           <Tab.List className="flex justify-between mx-auto my-4 space-x-2">
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-500 dark:text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
               Active Vote
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-500 dark:text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
               Voters
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-500 dark:text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
               Key Info
             </Tab>
-            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
+            <Tab className="inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium text-gray-500 dark:text-gray-400 border-gray-400 border ui-selected:text-messari-blue-light ui-selected:border-messari-blue-light">
               Details
             </Tab>
           </Tab.List>
 
-          <Tab.Panels className="text-white">
+          <Tab.Panels className="text-gray-900 dark:text-white">
             {/* Active Vote */}
             <Tab.Panel>
-              <h4 className="mr-2 text-sm font-medium text-white">
+              <h4 className="mr-2 text-sm font-medium text-gray-500 dark:text-white">
                 Voting ends in 5 days
               </h4>
               <div className="flex flex-col mt-4">
                 {proposalVoteOptions.map((option) => (
                   <div className="flex flex-col" key={option.title}>
                     <div className="flex justify-between">
-                      <span className="text-sm text-white">{option.title}</span>
-                      <span className="text-white">
+                      <span className="text-sm text-gray-900 dark:text-white">{option.title}</span>
+                      <span className="text-gray-900 dark:text-white">
                         {option.percentage.toString()}%
                       </span>
                     </div>
 
                     {/* Progress Bar with vote count */}
                     <div className="">
-                      <div className="rounded-full bg-messari-300">
+                      <div className="bg-gray-500 rounded-full dark:bg-messari-300">
                         <div
                           className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
                         >
@@ -589,11 +589,11 @@ export default function OldProposal() {
             {/* Voters */}
             <Tab.Panel>
               <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-800">
-                  <tbody className="divide-y divide-gray-800 bg-messari-600">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-800 dark:bg-messari-600">
                     {votes.slice(0, 5).map((vote) => (
-                      <tr key={vote.address} className="text-sm text-white">
-                        <td className="py-4 pl-4 pr-3 font-medium text-white whitespace-nowrap sm:pl-6">
+                      <tr key={vote.address} className="text-sm text-gray-900 dark:text-white">
+                        <td className="py-4 pl-4 pr-3 font-medium text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                           <div className="flex items-center justify-start space-x-1">
                             <Image
                               src={vote.avatar}
@@ -623,7 +623,7 @@ export default function OldProposal() {
                         <td className="hidden py-4 pl-3 pr-4 font-medium text-right sm:table-cell whitespace-nowrap sm:pr-6">
                           {/* Progress Bar with vote count */}
                           <div className="">
-                            <div className="rounded-full bg-messari-300">
+                            <div className="bg-gray-500 rounded-full dark:bg-messari-300">
                               <div className="bg-messari-blue-dark rounded-full w-[90%]">
                                 %
                               </div>
@@ -635,11 +635,11 @@ export default function OldProposal() {
                   </tbody>
                 </table>
                 <div
-                  className="flex items-center justify-between py-3 border-t border-gray-800 bg-messari-600 sm:px-6"
+                  className="flex items-center justify-between py-3 bg-white border-t border-gray-200 dark:border-gray-800 dark:bg-messari-600 sm:px-6"
                   aria-label="Pagination"
                 >
                   <button
-                    className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                    className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-gray-900 transition-all border border-gray-300 rounded-md shadow-sm dark:hover:bg-messari-300/60 hover:bg-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
                     onClick={() => setVotesDialogOpen(true)}
                   >
                     View All 51 Voters
@@ -654,10 +654,10 @@ export default function OldProposal() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <tbody>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Author
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <Link
                           href="https://etherscan.io/address/drewcoffman.eth"
                           target="_blank"
@@ -672,18 +672,18 @@ export default function OldProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Author Type
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Core</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Strategies
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <button
                           className="text-messari-blue-light hover:underline"
                           onClick={() => setStrategiesDialogOpen(true)}
@@ -693,10 +693,10 @@ export default function OldProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         IPFS
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <Link
                           href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
                           target="_blank"
@@ -709,18 +709,18 @@ export default function OldProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Voting System
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Single choice voting</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Snapshot Block
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <Link
                           href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
                           target="_blank"
@@ -735,26 +735,26 @@ export default function OldProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Start Date
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Feb 7, 2023</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         End Date
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>Feb 14, 2023</span>
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Total Votes Cast
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>
                           {truncateVoteCount(
                             graphQlProposalData.data.proposal.scores.reduce(
@@ -766,10 +766,10 @@ export default function OldProposal() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 pl-4 pr-3 text-sm text-gray-400 whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap sm:pl-6">
                         Total Voters
                       </td>
-                      <td className="py-2 pl-4 pr-3 text-sm text-right text-white whitespace-nowrap sm:pl-6">
+                      <td className="py-2 pl-4 pr-3 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <span>
                           {graphQlProposalData.data.proposal.votes} Voters
                         </span>
@@ -781,7 +781,7 @@ export default function OldProposal() {
             </Tab.Panel>
             <Tab.Panel>
               <button
-                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-gray-900 transition-all border border-gray-300 rounded-md shadow-sm dark:text-white hover:bg-gray-100 dark:hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
                 onClick={() => setDetailsDialogOpen(true)}
               >
                 View Details
@@ -791,9 +791,9 @@ export default function OldProposal() {
         </Tab.Group>
 
         {/* Regular content for screens md and up */}
-        <div className="hidden max-w-4xl py-10 mx-auto my-2 border-t border-b border-gray-800 shadow md:block bg-messari-600">
+        <div className="hidden max-w-4xl py-10 mx-auto my-2 border-t border-b border-gray-200 dark:shadow dark:border-gray-800 md:block dark:bg-messari-600">
           <div className="flex items-baseline justify-between flex-nowrap">
-            <h2 className="mb-2 font-bold text-white md:text-2xl">
+            <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-2xl">
               Off-Chain Vote
             </h2>
 
@@ -801,32 +801,32 @@ export default function OldProposal() {
               active vote
             </span>
           </div>
-          <span className="text-sm text-gray-400">Started 2 days ago</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">Started 2 days ago</span>
 
           {/* Active Vote */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="my-4 overflow-hidden md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:bg-white md:rounded-md dark:md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">
+              <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-lg">
                 Active Vote
               </h2>
             </div>
             <div className="px-4 pb-2 md:py-4 md:px-6">
-              <h4 className="mr-2 text-sm font-medium text-white">
+              <h4 className="mr-2 text-sm font-medium text-gray-500 dark:text-white">
                 Voting ends in 5 days
               </h4>
               <div className="flex flex-col mt-4">
                 {proposalVoteOptions.map((option) => (
                   <div className="flex flex-col" key={option.title}>
                     <div className="flex justify-between">
-                      <span className="text-sm text-white">{option.title}</span>
-                      <span className="text-white">
+                      <span className="text-sm ext-gray-900 dark:text-white">{option.title}</span>
+                      <span className="text-gray-900 dark:text-white">
                         {option.percentage.toString()}%
                       </span>
                     </div>
 
                     {/* Progress Bar with vote count */}
                     <div className="">
-                      <div className="rounded-full bg-messari-300">
+                      <div className="bg-gray-500 rounded-full dark:bg-messari-300">
                         <div
                         //   className={`bg-messari-blue-dark rounded-full w-[1%]`}
                           className={`bg-messari-blue-dark rounded-full w-[${option.percentage}%]`}
@@ -844,13 +844,13 @@ export default function OldProposal() {
           </div>
 
           {/* Voters */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="my-4 overflow-hidden md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:bg-white dark:md:rounded-md dark:md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">Voters</h2>
+              <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-lg">Voters</h2>
             </div>
             <div className="mt-8 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-800">
-                <tbody className="divide-y divide-gray-800">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                   {votes.slice(0, 5).map((vote) => {
                     const votePercentage = vote.votePercentage.toString().split(
                         "."
@@ -858,8 +858,8 @@ export default function OldProposal() {
                     const widthClass = `w-${votePercentage}`;
 
                     return (
-                    <tr key={vote.address} className="flex grid items-center grid-cols-5 text-sm text-white justify-evenly">
-                      <td className="py-4 font-medium text-white whitespace-nowrap sm:pl-6">
+                    <tr key={vote.address} className="grid items-center grid-cols-5 text-sm text-white justify-evenly">
+                      <td className="py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap sm:pl-6">
                         <div className="flex items-center justify-start space-x-1">
                           <Image
                             src={vote.avatar}
@@ -873,7 +873,7 @@ export default function OldProposal() {
                             href={`https://etherscan.io/address/${vote.address}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hover:underline hover:text-messari-blue-light"
+                            className="text-gray-900 dark:text-white hover:underline hover:text-messari-blue-light"
                           >
                             {/* truncate address */}
                             {vote.address.length > 10
@@ -883,18 +883,18 @@ export default function OldProposal() {
                         </div>
                       </td>
 
-                      <td className="py-4 whitespace-nowrap">
+                      <td className="py-4 text-gray-900 dark:text-white whitespace-nowrap">
                         {vote.vote}
                       </td>
 
-                      <td className="py-4 font-medium text-center whitespace-nowrap">
+                      <td className="py-4 font-medium text-center text-gray-900 dark:text-white whitespace-nowrap">
                         {vote.voteAmount}
                       </td>
 
                       <td className="w-full py-4 mx-auto font-medium">
                         {/* Progress Bar with vote count */}
                         <div className="w-full">
-                          <div className="rounded-full bg-messari-300">
+                          <div className="bg-gray-500 rounded-full dark:bg-messari-300">
                             <div className={clsx(
                                 widthClass,
                                 "bg-messari-blue-dark py-1.5 rounded-full"
@@ -904,7 +904,7 @@ export default function OldProposal() {
                         </div>
                       </td>
 
-                      <td className="py-4 pr-6 font-medium text-right whitespace-nowrap">
+                      <td className="py-4 pr-6 font-medium text-right text-gray-900 dark:text-white whitespace-nowrap">
                         {vote.votePercentage}%
                       </td>
                     </tr>
@@ -913,11 +913,11 @@ export default function OldProposal() {
                 </tbody>
               </table>
               <div
-                className="flex items-center justify-between py-3 text-white border-t border-gray-800 sm:px-6"
+                className="flex items-center justify-between py-3 text-gray-900 border-t border-gray-200 dark:text-white dark:border-gray-800 sm:px-6"
                 aria-label="Pagination"
               >
                 <button
-                  className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+                  className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 transition-all border border-gray-300 rounded-md shadow-sm dark:hover:bg-messari-300/60 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
                   onClick={() => setVotesDialogOpen(true)}
                 >
                   View All 51 Voters
@@ -927,17 +927,17 @@ export default function OldProposal() {
           </div>
 
           {/* Key Info */}
-          <div className="my-4 overflow-hidden md:divide-y md:divide-gray-800 md:bg-messari-500 md:rounded-md md:shadow">
+          <div className="my-4 overflow-hidden md:divide-y dark:md:divide-gray-800 md:divide-gray-200 dark:md:bg-messari-500 md:bg-white md:rounded-md md:shadow">
             <div className="px-4 pt-2 md:pt-4 md:px-6">
-              <h2 className="mb-2 font-bold text-white md:text-lg">Key Info</h2>
+              <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-lg">Key Info</h2>
             </div>
             <div className="px-4 pb-2 md:py-4 md:px-6">
               <div className="grid min-w-full grid-cols-2 gap-x-10">
                 <div className="flex justify-between">
-                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <span className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Author
                   </span>
-                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <span className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <Link
                       href="https://etherscan.io/address/drewcoffman.eth"
                       target="_blank"
@@ -950,18 +950,18 @@ export default function OldProposal() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <span className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Author Type
                   </span>
-                  <span className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <span className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     Core
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Strategies
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <button
                       className="text-messari-blue-light hover:underline"
                       onClick={() => setStrategiesDialogOpen(true)}
@@ -971,10 +971,10 @@ export default function OldProposal() {
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     IPFS
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <Link
                       href="https://cloudflare-ipfs.com/ipfs/bafkreibdyb5w5asdcj7djv42p44efxbwfivxatbt3cpiyv7ioynkdqnfky"
                       target="_blank"
@@ -987,18 +987,18 @@ export default function OldProposal() {
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Voting System
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <span>Single choice voting</span>
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Snapshot Block
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <Link
                       href={`https://etherscan.io/block/${graphQlProposalData.data.proposal.snapshot}`}
                       target="_blank"
@@ -1013,26 +1013,26 @@ export default function OldProposal() {
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Start Date
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <span>Feb 7, 2023</span>
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     End Date
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <span>Feb 14, 2023</span>
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Total Votes Cast
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <span>
                       {truncateVoteCount(
                         graphQlProposalData.data.proposal.scores.reduce(
@@ -1044,10 +1044,10 @@ export default function OldProposal() {
                   </div>
                 </div>
                 <div className="flex justify-between">
-                  <div className="py-2 text-sm text-gray-400 whitespace-nowrap ">
+                  <div className="py-2 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap ">
                     Total Voters
                   </div>
-                  <div className="py-2 text-sm text-right text-white whitespace-nowrap ">
+                  <div className="py-2 text-sm text-right text-gray-900 dark:text-white whitespace-nowrap ">
                     <span>
                       {graphQlProposalData.data.proposal.votes} Voters
                     </span>
@@ -1060,7 +1060,7 @@ export default function OldProposal() {
           {/* Details button */}
           <div>
             <button
-              className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-white transition-all border border-gray-300 rounded-md shadow-sm hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
+              className="flex justify-center w-full px-3 py-2 space-x-1 text-sm font-medium leading-4 text-gray-900 transition-all border border-gray-300 rounded-md shadow-sm dark:text-white hover:bg-messari-300/60 focus:outline-none focus:ring-2 focus:ring-messari-blue-light focus:ring-offset-2 hover:border-messari-blue-light"
               onClick={() => setDetailsDialogOpen(true)}
             >
               View Details
@@ -1069,8 +1069,8 @@ export default function OldProposal() {
         </div>
 
         {/* Related Proposals */}
-        <div className="max-w-4xl py-6 mx-auto text-white border-t-8 shadow md:border-0 border-messari-500 bg-messari-600">
-          <h2 className="mb-2 font-bold text-white md:text-2xl">
+        <div className="max-w-4xl py-6 mx-auto text-gray-900 border-t-8 dark:text-white md:border-0 border-[#f8f9fc] dark:border-messari-500 dark:bg-messari-600">
+          <h2 className="mb-2 font-bold text-gray-900 dark:text-white md:text-2xl">
             Related Proposals
           </h2>
 
@@ -1080,7 +1080,7 @@ export default function OldProposal() {
               {relatedProposals.map((proposal) => (
                 <li
                   key={proposal.title}
-                  className="flex items-start justify-between px-4 py-4 overflow-hidden text-sm rounded-md shadow md:justify-end md:items-center md:flex-row-reverse bg-messari-500 sm:px-6"
+                  className="flex items-start justify-between px-4 py-4 overflow-hidden text-sm bg-white rounded-md shadow md:justify-end md:items-center md:flex-row-reverse dark:bg-messari-500 sm:px-6"
                 >
                   <div className="hidden md:ml-auto md:flex md:flex-col">
                     <span
@@ -1093,7 +1093,7 @@ export default function OldProposal() {
                     >
                       {proposal.status}
                     </span>
-                    <p className="hidden pt-2 text-right text-gray-400 md:block">
+                    <p className="hidden pt-2 text-right text-gray-500 dark:text-gray-400 md:block">
                       {proposal.created}
                     </p>
                   </div>
@@ -1105,13 +1105,13 @@ export default function OldProposal() {
                       {proposal.title}
                     </Link>
 
-                    <h4 className="mb-2 text-gray-400 md:text-md">
+                    <h4 className="mb-2 text-gray-500 dark:text-gray-400 md:text-md">
                       {proposal.dao}
                     </h4>
 
                     {/* Badges */}
                     <div className="my-2 md:hidden">
-                      <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-white mr-2">
+                      <span className="inline-flex items-center rounded-md bg-[#D6DDEB] dark:bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-gray-900 dark:text-white mr-2">
                         {proposal.status === "Succeeded" && (
                           <>
                             <CheckIcon
@@ -1131,7 +1131,7 @@ export default function OldProposal() {
                           </>
                         )}
                       </span>
-                      <span className="inline-flex items-center rounded-md bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-white mr-2">
+                      <span className="inline-flex items-center rounded-md bg-[#D6DDEB] dark:bg-messari-300 px-2.5 py-0.5 space-x-1 font-medium text-gray-900 dark:text-white mr-2">
                         <FireIcon
                           className={clsx(
                             proposal.priority === "Low"
@@ -1144,7 +1144,7 @@ export default function OldProposal() {
                         <span>{proposal.priority}</span>
                       </span>
                     </div>
-                    <p className="text-gray-400 md:hidden">
+                    <p className="text-gray-500 dark:text-gray-400 md:hidden">
                       Created {proposal.created}
                     </p>
                   </div>

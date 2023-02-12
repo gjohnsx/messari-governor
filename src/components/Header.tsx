@@ -126,7 +126,7 @@ export default function Header() {
                     {/* Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" */}
                     <a
                       href="#"
-                      className="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md"
+                      className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
                     >
                       Data
                     </a>
